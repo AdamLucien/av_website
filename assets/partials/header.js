@@ -2,13 +2,14 @@
   const L = localStorage.getItem('lang') || 'cs';
   const t = (cs,ua)=> L==='ua' ? (ua||cs) : (cs||ua);
 
-  // Bezpečný resolver URL – respektuje <base href="..."> na GitHub Pages
-  function base(p){
-    const b = document.querySelector('base');
-    let root = b ? (b.getAttribute('href') || '/') : '/';
-    if (!root.endsWith('/')) root += '/';
-    return root + String(p).replace(/^\/+/, '');
-  }
+  // spravne base()
+  const base = (p) => {
+    p = p.replace(/^\//, "");
+    const depth = (location.pathname.match(/\//g) || []).length - 1;
+    return (depth > 1
+      ? '../'.repeat(depth - 1) + p
+      : '/' + p);
+  };
 
   // NAV — Domů přidané, bez Timeline
   const nav = [
