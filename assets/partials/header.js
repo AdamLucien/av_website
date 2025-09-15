@@ -1,10 +1,14 @@
 (function(){
   const L = localStorage.getItem('lang') || 'cs';
   const t = (cs,ua)=> L==='ua' ? (ua||cs) : (cs||ua);
-  const base = (p) => { return p.replace(/^\//, ""); };
-    const depth = (location.pathname.match(/\//g)||[]).length - 1;
-    return (depth>1 ? ('../'.repeat(depth-1)+p.replace(/^\//,'')) : ('/'+p.replace(/^\//,'')));
-  };
+
+  // Bezpečný resolver URL – respektuje <base href="..."> na GitHub Pages
+  function base(p){
+    const b = document.querySelector('base');
+    let root = b ? (b.getAttribute('href') || '/') : '/';
+    if (!root.endsWith('/')) root += '/';
+    return root + String(p).replace(/^\/+/, '');
+  }
 
   // NAV — Domů přidané, bez Timeline
   const nav = [
@@ -23,8 +27,8 @@
   <header class="relative z-50 bg-black/35 backdrop-blur-xl border-b border-white/10">
     <div class="max-w-6xl mx-auto px-4 py-2">
       <div class="flex items-center justify-between">
-        <a class="flex items-center" href="${base('/index.html')}" data-no-turn="1">
-          <img src="${base('/assets/brand/av-logo.png')}" alt="AV · 13" class="h-12 w-auto md:h-14">
+        <a class="flex items-center" href="${base('index.html')}" data-no-turn="1">
+          <img src="${base('assets/brand/av-logo.png')}" alt="AV · 13" class="h-12 w-auto md:h-14">
         </a>
 
         <div class="nav-wrap hidden md:block relative">
@@ -37,12 +41,12 @@
 
         <div class="flex items-center gap-2">
           <button id="langCZ" class="flag-btn tap" aria-label="Čeština">
-            <span class="flag" id="flagCZ">
+            <span class="flag">
               <svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="1" y="1" fill="#d7141a"/><polygon points="0,0 1.2,1 0,2" fill="#11457e"/></svg>
             </span>
           </button>
           <button id="langUA" class="flag-btn tap" aria-label="Українська">
-            <span class="flag" id="flagUA">
+            <span class="flag">
               <svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#0057b7"/><rect width="3" height="1" y="1" fill="#ffd700"/></svg>
             </span>
           </button>
@@ -51,16 +55,16 @@
       </div>
     </div>
 
-    <!-- Mobilní menu: tmavý overlay + pevné tmavé pozadí panelu -->
+    <!-- Mobilní menu: tmavý overlay + neprůhledný panel -->
     <div id="drawer" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-sm">
       <div class="max-w-sm w-[92%] mx-auto mt-16">
         <div class="mx-auto w-14 h-1.5 rounded-full bg-white/25 mb-3"></div>
         <div class="rounded-2xl p-5 shadow-2xl border border-white/10 bg-[#0b1022]/95">
           <div class="flex items-center justify-center gap-3 mb-4">
-            <button id="langCZm" class="flag-btn"><span class="flag" id="flagCZm">
+            <button id="langCZm" class="flag-btn"><span class="flag">
               <svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="1" y="1" fill="#d7141a"/><polygon points="0,0 1.2,1 0,2" fill="#11457e"/></svg>
             </span></button>
-            <button id="langUAm" class="flag-btn"><span class="flag" id="flagUAm">
+            <button id="langUAm" class="flag-btn"><span class="flag">
               <svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#0057b7"/><rect width="3" height="1" y="1" fill="#ffd700"/></svg>
             </span></button>
           </div>
@@ -73,17 +77,16 @@
     </div>
   </header>`;
 
-  function setLang(l){ localStorage.setItem('lang',l); location.reload(); }
+  function setLang(l){ try{ localStorage.setItem('lang',l);}catch(e){} location.reload(); }
   document.getElementById('langCZ')?.addEventListener('click', ()=>setLang('cs'));
   document.getElementById('langUA')?.addEventListener('click', ()=>setLang('ua'));
   document.getElementById('langCZm')?.addEventListener('click', ()=>setLang('cs'));
   document.getElementById('langUAm')?.addEventListener('click', ()=>setLang('ua'));
 
-  // mobilní menu – otevřít/zavřít + zamknout scroll + klik mimo panel zavírá
+  // mobilní menu – otevřít/zavřít + lock scroll + klik mimo panel zavírá
   const drawer = document.getElementById('drawer');
-  const openDrawer = ()=>{ drawer.classList.remove('hidden'); document.documentElement.classList.add('overflow-hidden'); };
-  const closeDrawer= ()=>{ drawer.classList.add('hidden');    document.documentElement.classList.remove('overflow-hidden'); };
-
+  const openDrawer = ()=>{ drawer?.classList.remove('hidden'); document.documentElement.classList.add('overflow-hidden'); };
+  const closeDrawer= ()=>{ drawer?.classList.add('hidden');    document.documentElement.classList.remove('overflow-hidden'); };
   document.getElementById('hamb')?.addEventListener('click', openDrawer);
   document.getElementById('drawerClose')?.addEventListener('click', closeDrawer);
   drawer?.addEventListener('click', (e)=>{ if (e.target === drawer) closeDrawer(); });
@@ -93,17 +96,25 @@
     const navEl = el.querySelector('.nav'); const line = el.querySelector('#navLine');
     if(!navEl||!line) return;
     const links=[...navEl.querySelectorAll('a')];
-    const here = (location.pathname === '/' ? '/index.html' : location.pathname);
+
+    // aktuální path normalizovaná proti base
+    let here = location.pathname;
+    if (here === '/' || here === '') here = base('index.html');
+
     function moveLine(a){
       const r=a.getBoundingClientRect(), p=navEl.getBoundingClientRect();
       line.style.width=r.width+'px';
       line.style.transform=`translateX(${r.left-p.left}px)`;
     }
+
     const idx = links.findIndex(a=>{
-      const href = a.getAttribute('href');
-      return here.endsWith(href.split('/').pop()||'index.html');
+      const href = a.getAttribute('href') || '';
+      const tail = href.split('/').pop() || 'index.html';
+      return here.endsWith('/'+tail);
     });
+
     moveLine(links[idx>=0?idx:0]);
+
     links.forEach(a=>['mouseenter','focus','touchstart']
       .forEach(ev=>a.addEventListener(ev,()=>moveLine(a),{passive:true})));
     navEl.addEventListener('mouseleave',()=>moveLine(links[idx>=0?idx:0]));
