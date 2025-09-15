@@ -8,11 +8,11 @@
 
   // NAV — Domů přidané, bez Timeline
   const nav = [
-    {href:'/index.html',            cs:'Domů',       ua:'Додому'},
-    {href:'/rain-story/index.html', cs:'Déšť',       ua:'Дощ'},
-    {href:'/stats/index.html',      cs:'Statistiky', ua:'Статистика'},
-    {href:'/roses/index.html',      cs:'Růže',       ua:'Троянди'},
-    {href:'/letter/index.html',     cs:'Dopis',      ua:'Лист'}
+    {href: 'index.html',            cs:'Domů',       ua:'Додому'},
+    {href: 'rain-story/index.html', cs:'Déšť',       ua:'Дощ'},
+    {href: 'stats/index.html',      cs:'Statistiky', ua:'Статистика'},
+    {href: 'roses/index.html',      cs:'Růže',       ua:'Троянди'},
+    {href: 'letter/index.html',     cs:'Dopis',      ua:'Лист'}
   ];
 
   const el = document.getElementById('app-header');
