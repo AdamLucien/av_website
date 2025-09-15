@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>AV · Déšť nás spojil</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/site.css" />
+
+  <script defer src="/assets/data.js"></script>
+  <script defer src="/assets/shared-bg.js"></script>
+  <script defer src="/assets/partials/header.js"></script>
+
+  <style>
+    .bg-mesh{background:
+      radial-gradient(900px 600px at 20% -20%, rgba(139,92,246,.20), transparent 60%),
+      radial-gradient(900px 600px at 80% 120%, rgba(34,211,238,.18), transparent 60%),
+      linear-gradient(180deg,#0a0f1f,#0e1220);}
+
+    .cardg{border-radius:16px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .badge{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(15,23,51,.75);
+      border:1px solid rgba(147,197,253,.22);color:#a9b8ff;font-size:12px}
+    .rule{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)}
+
+    .kpi{display:flex;flex-direction:column;gap:6px}
+    .kpi .num{font-size:clamp(28px,5vw,34px);font-weight:800;letter-spacing:.2px}
+    .kpi .hint{color:#cfd7ff}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#dbe5ff;font-size:13px}
+  </style>
+</head>
+
+<body class="bg-mesh text-white selection:bg-amethyst/30">
+  <div id="app-header"></div>
+
+  <main class="container section relative z-10">
+    <!-- Hlava -->
+    <section class="mb-6">
+      <h1 id="ttl" class="grad-text text-3xl md:text-5xl font-black mb-2" data-reveal>Déšť nás spojil</h1>
+      <p id="sub" class="text-aura/90 mb-4" data-reveal>—</p>
+      <div id="facts" class="flex flex-wrap gap-2" data-reveal></div>
+    </section>
+
+    <div class="rule my-6" aria-hidden="true"></div>
+
+    <!-- KPI -->
+    <section class="grid md:grid-cols-3 gap-4 mb-10">
+      <div class="cardg kpi" data-reveal>
+        <div class="hint" id="k_lbl_total">Zpráv celkem</div>
+        <div id="k_total" class="num">0</div>
+        <div id="k_desc_total" class="text-white/70 text-sm">—</div>
+      </div>
+      <div class="cardg kpi" data-reveal>
+        <div class="hint" id="k_lbl_days">Dny aktivní</div>
+        <div id="k_days" class="num">0</div>
+        <div id="k_desc_days" class="text-white/70 text-sm">—</div>
+      </div>
+      <div class="cardg kpi" data-reveal>
+        <div class="hint" id="k_lbl_avg">Průměr / den</div>
+        <div id="k_avg" class="num">0</div>
+        <div id="k_desc_avg" class="text-white/70 text-sm">—</div>
+      </div>
+
+      <div class="cardg kpi md:col-span-3 grid md:grid-cols-3 gap-4" data-reveal>
+        <div class="kpi">
+          <div class="hint" id="k_lbl_pos">Pozitivní</div>
+          <div id="k_pos" class="num">0%</div>
+          <div id="k_desc_pos" class="text-white/70 text-sm">—</div>
+        </div>
+        <div class="kpi">
+          <div class="hint" id="k_lbl_neg">Negativní</div>
+          <div id="k_neg" class="num">0%</div>
+          <div id="k_desc_neg" class="text-white/70 text-sm">—</div>
+        </div>
+        <div class="kpi">
+          <div class="hint" id="k_lbl_gap">Nejdelší ticho</div>
+          <div id="k_gap" class="num">0 h</div>
+          <div id="k_desc_gap" class="text-white/70 text-sm">—</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Milníky -->
+    <section class="mb-10">
+      <h2 class="text-xl md:text-2xl font-semibold mb-3" data-reveal id="msTitle">Milníky</h2>
+      <div id="milestones" class="grid md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- Pauzy -->
+    <section class="mb-10">
+      <h2 class="text-xl md:text-2xl font-semibold mb-3" data-reveal id="gapsTitle">Ticha v dešti</h2>
+      <div id="gaps" class="grid md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- Fáze -->
+    <section class="mb-10">
+      <h2 class="text-xl md:text-2xl font-semibold mb-3" data-reveal id="phTitle">Fáze příběhu</h2>
+      <div id="phases" class="grid md:grid-cols-3 gap-4"></div>
+    </section>
+
+    <div class="mt-8">
+      <a class="btn inline-flex items-center gap-2 rounded-xl px-4 py-2" href="/index.html" id="back">← Zpět</a>
+    </div>
+  </main>
+
+  <footer class="text-center text-white/60 py-10 relative z-10">© AV — 13</footer>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const LANG = localStorage.getItem('lang') || 'cs';
+      const LOCALE = (LANG === 'ua' ? 'uk' : 'cs');
+
+      function num(n){ return (n??0).toLocaleString(LOCALE); }
+      function fmtDate(s){
+        if(!s) return '—';
+        const d = new Date(String(s).replace(' ','T'));
+        return d.toLocaleDateString(LOCALE, { day:'2-digit', month:'2-digit', year:'numeric' });
+      }
+      const pick = (cs, ua)=> (LANG==='ua' ? (ua ?? cs) : (cs ?? ua));
+
+      const T = (LANG==='ua') ? {
+        title: "Дощ нас поєднав",
+        sub:    (N)=>`13 місяців між ${fmtDate(N.period?.start)} і ${fmtDate(N.period?.end)}. Повідомлень: ${num(N.totals?.all_incl_media)}. Двічі тиша — завжди повернення.`,
+        chips:  (N)=>[
+          `❤️ ${num(N.totals?.all_incl_media)} повідомлень`,
+          `📅 ${num(N.totals?.days_active)} днів разом`,
+          `🖼️ ${num(N.media?.images||0)} фото · 🎞️ ${num(N.media?.videos||0)} відео`
+        ],
+        blocks: { milestones:"Віхи", gaps:"Тиша під дощем", phases:"Фази історії", back:"← Назад" },
+        kpiLbl: { total:"Повідомлень всього", days:"Активні дні", avg:"Середнє / день",
+                  pos:"Позитивні", neg:"Негативні", gap:"Найдовша тиша" },
+        kpiDesc:{ total:"Слова як міст через будь-яку зливу.",
+                  days:"Щодня — одна крапля. Разом — море.",
+                  avg:"Ритм серця, переписаний у повідомлення.",
+                  pos:"Сонце, що проходить навіть крізь хмари.",
+                  neg:"Дощ, який навчив нас зближуватись.",
+                  gap:"Пауза, після якої ми знов обрали «нас»." },
+        units:  { hours:" год" },
+        gapWord: "Тиша"
+      } : {
+        title: "Déšť nás spojil",
+        sub:    (N)=>`13 měsíců mezi ${fmtDate(N.period?.start)} a ${fmtDate(N.period?.end)}. Zpráv: ${num(N.totals?.all_incl_media)}. Dvakrát ticho, vždy návrat.`,
+        chips:  (N)=>[
+          `❤️ ${num(N.totals?.all_incl_media)} zpráv`,
+          `📅 ${num(N.totals?.days_active)} dní spolu`,
+          `🖼️ ${num(N.media?.images||0)} fotek · 🎞️ ${num(N.media?.videos||0)} videí`
+        ],
+        blocks: { milestones:"Milníky", gaps:"Ticha v dešti", phases:"Fáze příběhu", back:"← Zpět" },
+        kpiLbl: { total:"Zpráv celkem", days:"Dny aktivní", avg:"Průměr / den",
+                  pos:"Pozitivní", neg:"Negativní", gap:"Nejdelší ticho" },
+        kpiDesc:{ total:"Slova jako mosty přes všechny bouře.",
+                  days:"Každý den kapka — a moře je naše.",
+                  avg:"Kadence srdce přepsaná do zpráv.",
+                  pos:"Slunce, které prošlo i skrz mraky.",
+                  neg:"Déšť, který nás naučil běžet blíž k sobě.",
+                  gap:"Pauza, po níž jsme si zvolili zase „nás“." },
+        units:  { hours:" h" },
+        gapWord: "Ticho"
+      };
+
+      const N = window.NDATA || {};
+
+      // Headline
+      document.getElementById('ttl').textContent = T.title;
+      document.getElementById('sub').textContent = T.sub(N);
+      document.getElementById('msTitle').textContent = T.blocks.milestones;
+      document.getElementById('gapsTitle').textContent = T.blocks.gaps;
+      document.getElementById('phTitle').textContent  = T.blocks.phases;
+      document.getElementById('back').textContent     = T.blocks.back;
+
+      // Facts chips
+      const facts = document.getElementById('facts');
+      T.chips(N).forEach(txt=>{
+        const el = document.createElement('span'); el.className='chip'; el.textContent = txt; facts.appendChild(el);
+      });
+
+      // KPI numbers
+      const total = N.totals?.all_incl_media||0;
+      const days  = N.totals?.days_active||0;
+      const avg   = N.activity?.daily_avg_no_media || Math.round(total/(days||1));
+      const pos   = N.sentiment?.positive_rate_percent||0;
+      const neg   = N.sentiment?.negative_rate_percent||0;
+      const longestGapH = (()=> {
+        const gaps = (N.gaps||[]);
+        let max = 0;
+        for(const g of gaps){
+          const h = g.hours ?? ((new Date(g.to)-new Date(g.from))/36e5);
+          if (h>max) max=h;
+        }
+        return Math.round(max||0);
+      })();
+
+      // KPI labels + poetic lines
+      k_lbl_total.textContent = T.kpiLbl.total; k_desc_total.textContent = T.kpiDesc.total;
+      k_lbl_days.textContent  = T.kpiLbl.days;  k_desc_days.textContent  = T.kpiDesc.days;
+      k_lbl_avg.textContent   = T.kpiLbl.avg;   k_desc_avg.textContent   = T.kpiDesc.avg;
+      k_lbl_pos.textContent   = T.kpiLbl.pos;   k_desc_pos.textContent   = T.kpiDesc.pos;
+      k_lbl_neg.textContent   = T.kpiLbl.neg;   k_desc_neg.textContent   = T.kpiDesc.neg;
+      k_lbl_gap.textContent   = T.kpiLbl.gap;   k_desc_gap.textContent   = T.kpiDesc.gap;
+
+      countUp('#k_total', total);
+      countUp('#k_days',  days);
+      countUp('#k_avg',   avg);
+      countUp('#k_pos',   pos, '%');
+      countUp('#k_neg',   neg, '%');
+      countUp('#k_gap',   longestGapH, T.units.hours);
+
+      function countUp(sel, to, suffix=''){
+        const el = document.querySelector(sel);
+        const dur = 900; const start = performance.now();
+        const from = 0;
+        function ease(x){ return 1 - Math.pow(1-x, 3); }
+        function tick(t){
+          const p = Math.min(1,(t-start)/dur);
+          const val = Math.round(from + (to-from)*ease(p));
+          el.textContent = (LOCALE==='uk'?val.toLocaleString('uk'):val.toLocaleString('cs')) + suffix;
+          if(p<1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      // Milestones
+      (function renderMilestones(){
+        const list = (N.milestones||[]).slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
+        const wrap = document.getElementById('milestones');
+        if(!list.length){ wrap.innerHTML = `<div class="text-white/70">—</div>`; return; }
+        list.forEach(m=>{
+          const el = document.createElement('div');
+          el.className = 'cardg';
+          el.innerHTML = `
+            <div class="badge">${fmtDate(m.date)}</div>
+            <h3 class="text-white/90 mt-2">${pick(m.text_cs, m.text_ua) || ''}</h3>
+          `;
+          wrap.appendChild(el);
+        });
+      })();
+
+      // Gaps
+      (function renderGaps(){
+        const wrap = document.getElementById('gaps');
+        const gaps = (N.gaps||[]).slice().sort((a,b)=>new Date(a.from)-new Date(b.from));
+        if(!gaps.length){ wrap.innerHTML = `<div class="text-white/70">—</div>`; return; }
+        gaps.forEach(g=>{
+          const hrs = Math.round(g.hours ?? ((new Date(g.to)-new Date(g.from))/36e5));
+          const el = document.createElement('div'); el.className='cardg';
+          el.innerHTML = `
+            <div class="badge">${fmtDate(g.from)} → ${fmtDate(g.to)}</div>
+            <h3 class="text-white/90 mt-2">${T.gapWord} ≈ ${hrs.toLocaleString(LOCALE)}${T.units.hours}</h3>
+            <p class="text-white/70 mt-1">${pick(
+              'Pauza, po které jsme si znovu vybrali „nás“.',
+              'Пауза, після якої ми знову обирали «нас».'
+            )}</p>
+          `;
+          wrap.appendChild(el);
+        });
+      })();
+
+      // Phases
+      (function renderPhases(){
+        const wrap = document.getElementById('phases');
+        const arr = (N.narrative_phases||[]);
+        if(!arr.length){ wrap.innerHTML = `<div class="text-white/70">—</div>`; return; }
+        arr.forEach((p,i)=>{
+          const el = document.createElement('div');
+          el.className = 'cardg';
+          const title = pick(p.title_cs||`Fáze ${i+1}`, p.title_ua||`Фаза ${i+1}`);
+          const note  = pick(p.note_cs, p.note_ua);
+          el.innerHTML = `
+            <div class="badge">${(p.range||[]).join(' → ') || '—'}</div>
+            <h3 class="text-white mt-2 font-semibold">${title}</h3>
+            ${note ? `<p class="text-white/75 mt-1">${note}</p>`:''}
+          `;
+          wrap.appendChild(el);
+        });
+      })();
+
+      // jemný reveal
+      document.querySelectorAll('[data-reveal]').forEach((el,i)=>{
+        el.style.opacity=0; el.style.transform='translateY(12px) scale(.98)'; el.style.filter='blur(2px)';
+        setTimeout(()=>{ el.style.transition='opacity .6s ease, transform .6s ease, filter .6s ease';
+          el.style.opacity=1; el.style.transform='none'; el.style.filter='none'; }, 120*i + 150);
+      });
+    });
+  </script>
+</body>
+</html>

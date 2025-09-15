@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>AV · 13 měsíců</title>
+
+  <!-- Assets -->
+  <link rel="preload" href="./assets/site.css" as="style">
+  <link rel="stylesheet" href="./assets/site.css">
+  <script defer src="./assets/data.js"></script>
+  <script defer src="./assets/app.js"></script>
+  <script defer src="./assets/bg.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
+
+  <style>
+    /* --- Landing-only styles --- */
+    .hero {
+      position: relative; z-index: 1; min-height: 90svh;
+      display: grid; place-items: center; text-align: center; padding: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 6.5vw, 50px);
+      line-height: 1.15;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg,#6ea1ff,#9bb8ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: clamp(16px, 3.5vw, 20px); color: var(--mut); margin: 8px 0 22px; }
+
+    .section { position: relative; z-index: 1; padding: 28px 0; }
+    .section h2 { margin-bottom: 10px; font-size: clamp(22px, 4.5vw, 28px); }
+    .muted { color: var(--mut); }
+
+    /* KPIs */
+    .kpi-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+    @media (min-width: 900px){ .kpi-grid { grid-template-columns: repeat(4,1fr); } }
+    .kpi-card { text-align: center; }
+    .kpi-card b { display:block; font-size: clamp(20px, 5vw, 28px); margin-top: 8px; }
+
+    /* Timeline */
+    .tl { display:grid; gap:14px; }
+    @media (min-width: 900px){ .tl { grid-template-columns: repeat(5,1fr); } }
+    .tl .card { min-height: 140px; display:flex; flex-direction:column; gap:8px }
+
+    /* Quote */
+    .quote-card { text-align:center; font-size: clamp(18px, 4vw, 22px); line-height:1.6 }
+    .type-cursor { display:inline-block; width:10px; height:1.1em; background:#e6e8f2; margin-left:4px; animation: blink 1s steps(2) infinite; vertical-align:-0.1em;}
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Symbol */
+    .symbol-card { text-align:center }
+    .symbol-logo { width: min(360px, 70vw); margin: 6px auto 10px; display:block; }
+
+    /* CTA with petals */
+    .cta-roses { position: relative; overflow: hidden; }
+    .petal { position:absolute; font-size: 22px; opacity:.75; animation:fall 9s linear infinite; pointer-events:none }
+    @keyframes fall {
+      0% { transform: translateY(-20svh) rotate(0deg); }
+      100% { transform: translateY(110svh) rotate(380deg); }
+    }
+    .cta-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:12px }
+
+    /* Parallax helpers */
+    [data-parallax] { will-change: transform; }
+  </style>
+</head>
+<body>
+  <!-- HERO -->
+  <section class="hero section">
+    <div class="container">
+      <h1 id="h1" data-parallax></h1>
+      <p id="p" class="muted" data-parallax></p>
+      <a id="cta" href="rain-story/index.html" class="btn" data-parallax></a>
+    </div>
+  </section>
+
+  <!-- KPIs -->
+  <section class="section">
+    <div class="container">
+      <h2 id="kpiTitle"></h2>
+      <div class="kpi-grid">
+        <div class="card kpi-card">
+          <div class="muted">Zpráv celkem</div>
+          <b id="k_total">–</b>
+          <div class="caption">Náš jazyk blízkosti.</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="muted">Média</div>
+          <b id="k_media">–</b>
+          <div class="caption">Když slova nestačí.</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="muted">Tempo odpovědi</div>
+          <b id="k_reply">–</b>
+          <div class="caption">Rychlé reakce, otevřené srdce.</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="muted">Nejdelší ticho</div>
+          <b id="k_gap">–</b>
+          <div class="caption">Ticho ≠ konec. Návrat je volba.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE: momenty -->
+  <section class="section">
+    <div class="container">
+      <h2 id="momentsTitle"></h2>
+      <div class="tl">
+        <div class="card" data-parallax>
+          <div class="muted">3. 9. 2024</div>
+          <div id="m1">„Кохаю тебе безмежно 😘“</div>
+        </div>
+        <div class="card" data-parallax>
+          <div class="muted">3. 9. 2024</div>
+          <div id="m2">„Má lásko 💗“</div>
+        </div>
+        <div class="card" data-parallax>
+          <div class="muted">6.–12. 12. 2024</div>
+          <div id="m3">Ticho. Ne konec. Pauza, po které jsme si znovu vybrali nás.</div>
+        </div>
+        <div class="card" data-parallax>
+          <div class="muted">15.–20. 2. 2025</div>
+          <div id="m4">Druhá zkouška. Vydrželi jsme.</div>
+        </div>
+        <div class="card" data-parallax>
+          <div class="muted">13. 9. 2025</div>
+          <div id="m5">13 měsíců. Pořád „spolu“.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="section">
+    <div class="container">
+      <div class="card quote-card" data-parallax>
+        <span id="quote"></span><span class="type-cursor"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYMBOL (logo + význam) -->
+  <section class="section">
+    <div class="container">
+      <h2 id="symbolTitle"></h2>
+      <div class="card symbol-card" data-parallax>
+        <!-- Vyměň src za svoje finální logo -->
+        <img class="symbol-logo" src="./assets/icons/favicon.svg" alt="AV logo">
+        <p id="symbolCopy" class="muted" style="margin-top:8px"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA ROSES -->
+  <section class="section cta-roses">
+    <div class="container card" style="text-align:center" data-parallax>
+      <h2 id="ctaFinalTitle">SPOLU.</h2>
+      <div class="cta-actions">
+        <a class="btn" href="rain-story/index.html">Déšť nás spojil</a>
+        <a class="btn" href="stats/index.html">Velké statistiky</a>
+        <a class="btn" href="letter/index.html">Dopis</a>
+        <a class="btn" href="roses/index.html">Růže</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    © 2025 AV · 13 měsíců spolu
+  </div>
+
+  <script>
+    // --- Helpers ---
+    function animateCounter(el, to, duration=900, fmt=v=>v.toLocaleString('cs-CZ')) {
+      const start = performance.now(), from = 0;
+      function tick(t){
+        const p = Math.min(1, (t - start)/duration);
+        el.textContent = fmt(Math.floor(from + (to - from) * (p*p*(3-2*p)))); // smoothstep
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function typewriter(el, text, speed=18) {
+      let i = 0;
+      function step(){
+        el.textContent = text.slice(0, i++);
+        if (i <= text.length) setTimeout(step, speed);
+      }
+      step();
+    }
+
+    // Parallax on scroll (subtle)
+    const parallaxNodes = [];
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('[data-parallax]').forEach(n => parallaxNodes.push(n));
+    });
+    addEventListener('scroll', () => {
+      const y = scrollY || pageYOffset;
+      parallaxNodes.forEach((n, idx) => {
+        const factor = 0.05 + (idx % 3) * 0.02;
+        n.style.transform = `translate3d(0, ${y*factor}px, 0)`;
+      });
+    }, {passive:true});
+
+    // Petals in CTA
+    function spawnPetals(container, count=16) {
+      const area = container.getBoundingClientRect();
+      for (let i=0;i<count;i++){
+        const s = document.createElement('div');
+        s.className = 'petal';
+        s.textContent = '🌹';
+        s.style.left = (Math.random()*96)+'vw';
+        s.style.animationDelay = (Math.random()*6)+'s';
+        s.style.opacity = (0.45 + Math.random()*0.55).toFixed(2);
+        container.appendChild(s);
+        setTimeout(()=> s.remove(), 9000);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const t = UX.t;
+
+      // Hero texts
+      h1.textContent  = t(NDATA.copy.cs.landing_h1, NDATA.copy.ua.landing_h1);
+      p.textContent   = t(NDATA.copy.cs.landing_p,  NDATA.copy.ua.landing_p);
+      cta.textContent = t(NDATA.copy.cs.cta_start,  NDATA.copy.ua.cta_start);
+
+      // KPI title
+      const kpiTitle = document.getElementById('kpiTitle');
+      kpiTitle.textContent = t('Naše čísla, náš jazyk','Наші числа — наша мова');
+
+      // Counters
+      animateCounter(document.getElementById('k_total'), NDATA.totals.all_incl_media || 0);
+      const mediaVal = (NDATA.media.images||0) + (NDATA.media.videos||0);
+      animateCounter(document.getElementById('k_media'), mediaVal);
+      const replySec = Math.round(((NDATA.replies?.median_sec_you||0)+(NDATA.replies?.median_sec_her||0))/2) || '–';
+      document.getElementById('k_reply').textContent = replySec === '–' ? '–' : (replySec+' s');
+      const gapH = (NDATA.gaps && NDATA.gaps[0]) ? NDATA.gaps[0].hours : 0;
+      document.getElementById('k_gap').textContent = gapH ? (gapH.toFixed(1)+' h') : '–';
+
+      // Moments section localized
+      document.getElementById('momentsTitle').textContent = t('Naše momenty','Наші моменти');
+      document.getElementById('m1').textContent = t('„Кохаю тебе безmežně 😘“ – poprvé to zaznělo.','«Кохаю тебе безмежно 😘» — вперше це прозвучало.');
+      document.getElementById('m2').textContent = t('„Má lásko 💗“','«Моє кохання 💗»');
+      document.getElementById('m3').textContent = t('Ticho. Ne konec. Pauza, po které jsme si znovu vybrali nás.','Тиша. Не кінець. Пауза, після якої ми знову вибрали нас.');
+      document.getElementById('m4').textContent = t('Druhá zkouška. Vydrželi jsme.','Друге випробування. Ми витримали.');
+      document.getElementById('m5').textContent = t('13 měsíců. Pořád „spolu“.','13 місяців. Досі «разом».');
+
+      // Quote typewriter
+      const q = t('„Našel jsem v tobě klid v bouři.“','«Я знайшов у тобі спокій у бурі.»');
+      typewriter(document.getElementById('quote'), q, 20);
+
+      // Symbol copy
+      document.getElementById('symbolTitle').textContent = t('Náš symbol','Наш символ');
+      document.getElementById('symbolCopy').textContent = t(
+        'Štít s korunou, drakem a jednorožcem. „AV“ s 7+7 lístky: každé „ano“ je květ.',
+        'Щит з короною, драконом і єдинорогом. «AV» з 7+7 пелюстками: кожне «так» — як квіт.'
+      );
+
+      // CTA petals
+      const ctaSection = document.querySelector('.cta-roses');
+      spawnPetals(ctaSection, 22);
+      // light confetti on bottom arrival
+      let fired = false;
+      addEventListener('scroll', ()=> {
+        if (fired) return;
+        const rect = ctaSection.getBoundingClientRect();
+        if (rect.top < innerHeight && rect.bottom <= innerHeight + 120){
+          fired = true; spawnPetals(ctaSection, 32);
+        }
+      }, {passive:true});
+    });
+  </script>
+</body>
+</html>

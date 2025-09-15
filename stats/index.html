@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>AV · Statistiky</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <script defer src="../assets/data.js"></script>
+  <script defer src="../assets/shared-bg.js"></script>
+  <script defer src="../assets/partials/header.js"></script>
+
+  <style>
+    .bg-mesh{background:
+      radial-gradient(900px 600px at 20% -20%, rgba(139,92,246,.20), transparent 60%),
+      radial-gradient(900px 600px at 80% 120%, rgba(34,211,238,.18), transparent 60%),
+      linear-gradient(180deg,#0a0f1f,#0e1220);}
+    .kpi{position:relative;border-radius:16px;padding:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden}
+    .kpi::before{content:"";position:absolute;inset:-1px;border-radius:16px;z-index:0;background:linear-gradient(135deg,rgba(139,92,246,.35),rgba(34,211,238,.25));filter:blur(14px);opacity:.35;pointer-events:none}
+    .kpi .inner{position:relative;z-index:1}
+    .kpi .label{color:#a8b0d6;font-size:14px;display:flex;align-items:center;gap:8px}
+    .kpi .value{font-weight:900;font-size:32px;margin-top:6px}
+    .kpi .delta{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:4px 8px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#dbe5ff}
+    .card-g{border-radius:16px;padding:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .rule{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)}
+  </style>
+</head>
+
+<body class="bg-mesh text-white selection:bg-amethyst/30">
+  <div id="app-header"></div>
+
+  <main class="container section relative z-10">
+    <h1 id="hTitle" class="grad-text text-3xl md:text-5xl font-black mb-2">Velké statistiky</h1>
+    <p id="hSub" class="text-aura/90 mb-6">Čísla, která vyprávějí náš příběh.</p>
+
+    <div id="kpiGrid" class="grid md:grid-cols-3 gap-4"></div>
+
+    <div class="rule my-8"></div>
+
+    <div id="charts" class="grid md:grid-cols-2 gap-4"></div>
+
+    <div class="rule my-8"></div>
+
+    <section id="lists" class="grid md:grid-cols-2 gap-4"></section>
+  </main>
+
+  <footer class="text-center text-white/60 py-10 relative z-10">© AV — 13</footer>
+
+<script>
+(function(){
+  const isUA   = (localStorage.getItem('lang') || 'cs') === 'ua';
+  const LOCALE = isUA ? 'uk-UA' : 'cs-CZ';
+  const num = n => (n??0).toLocaleString(LOCALE);
+
+  function countUp(node, end, dur=900){
+    const start = 0; const t0 = performance.now();
+    function step(t){
+      const p = Math.min(1,(t-t0)/dur);
+      const v = Math.round(start + (end-start)*(0.5 - Math.cos(Math.PI*p)/2));
+      node.textContent = num(v);
+      if (p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function start(){
+    const N = window.NDATA || {};
+    const T = isUA ? {
+      title:'Великі статистики', sub:'Цифри, що розповідають нашу історію.',
+      kpis:{ total:'Повідомлень всього', days:'Активні дні', avg:'Середнє / день',
+             calls:'Дзвінків всього', callsA:'Дзвінки — Адам', callsV:'Дзвінки — Вікторка',
+             pos:'Позитивні (%)', neg:'Негативні (%)',
+             shareA:'Частка повідомлень — Адам (%)', shareV:'Частка повідомлень — Вікторка (%)',
+             medianA:'Медіана відповіді — Адам (с)', medianV:'Медіана відповіді — Вікторка (с)',
+             photos:'Фото', videos:'Відео', audios:'Аудіо', gifs:'GIF', stickers:'Наліпки', docs:'Документи', mom:'м/м'
+      },
+      charts:{ share:'Частка повідомлень — Адам vs. Вікторка', sentiment:'Сентимент',
+               callsByMonth:'Дзвінки по місяцях', length:'Довжина повідомлень (слова)',
+               pos:'Позитивні', neu:'Нейтральні', neg:'Негативні',
+               msgsByMonth:'Динаміка по місяцях'
+      },
+      lists:{ nouns:'Топ слова (іменники)', phrases:'Топ фрази', adam:'Адам', viktorka:'Вікторка', total:'Всього',
+              msgsTbl:'Повідомлення по місяцях — розподіл' }
+    } : {
+      title:'Velké statistiky', sub:'Čísla, která vyprávějí náš příběh.',
+      kpis:{ total:'Zpráv celkem', days:'Dny aktivní', avg:'Průměr / den',
+             calls:'Hovorů celkem', callsA:'Hovory — Adam', callsV:'Hovory — Viktorka',
+             pos:'Pozitivní (%)', neg:'Negativní (%)',
+             shareA:'Podíl zpráv — Adam (%)', shareV:'Podíl zpráv — Viktorka (%)',
+             medianA:'Medián reakce — Adam (s)', medianV:'Medián reakce — Viktorka (s)',
+             photos:'Fotky', videos:'Videa', audios:'Audia', gifs:'GIFy', stickers:'Samolepky', docs:'Dokumenty', mom:'m/m'
+      },
+      charts:{ share:'Podíl zpráv — Adam vs. Viktorka', sentiment:'Sentiment',
+               callsByMonth:'Hovory po měsících', length:'Délka zpráv (slova)',
+               pos:'Pozitivní', neu:'Neutrální', neg:'Negativní',
+               msgsByMonth:'Dynamika po měsících'
+      },
+      lists:{ nouns:'Top slova (podstatná jména)', phrases:'Top fráze', adam:'Adam', viktorka:'Viktorka', total:'Celkem',
+              msgsTbl:'Zprávy po měsících — rozpad' }
+    };
+
+    // Nadpisy
+    hTitle.textContent = T.title;
+    hSub.textContent   = T.sub;
+
+    // ===== KPI =====
+    const kpiGrid = document.getElementById('kpiGrid');
+    function addKPI({icon,label,value,delta=null,deltaLabel=T.kpis.mom}){
+      if (value==null) return;
+      const el = document.createElement('div');
+      el.className = 'kpi';
+      el.innerHTML = `
+        <div class="inner">
+          <div class="label"><span class="text-xl">${icon||'ℹ️'}</span><span>${label}</span></div>
+          <div class="value">—</div>
+          ${delta!==null ? `<div class="delta">${deltaLabel} ${delta}</div>` : ``}
+        </div>`;
+      kpiGrid.appendChild(el);
+      countUp(el.querySelector('.value'), value);
+      if (delta!==null){
+        const dEl = el.querySelector('.delta');
+        if (typeof delta === 'number'){
+          const up = delta > 0;
+          dEl.style.borderColor = up ? 'rgba(99,230,190,.45)' : 'rgba(255,123,123,.45)';
+          dEl.style.background  = up ? 'rgba(99,230,190,.12)' : 'rgba(255,123,123,.12)';
+          dEl.innerHTML = `${deltaLabel} ${up?'▲':'▼'} ${delta>0?'+':''}${delta}%`;
+        }
+      }
+      return el;
+    }
+
+    // KPI data (jen to, co existuje)
+    if (N.totals){ addKPI({icon:'💬',label:T.kpis.total, value:N.totals.all_incl_media}); addKPI({icon:'📆',label:T.kpis.days, value:N.totals.days_active}); }
+    const avg = N.activity?.daily_avg_no_media ?? (N.totals?.all_incl_media && N.totals?.days_active ? Math.round(N.totals.all_incl_media/N.totals.days_active) : null);
+    addKPI({icon:'📈',label:T.kpis.avg, value:avg});
+    if (N.calls?.total!=null){
+      addKPI({icon:'📞',label:T.kpis.calls, value:N.calls.total});
+      if (N.calls?.by_author?.adam!=null)     addKPI({icon:'👤',label:T.kpis.callsA, value:N.calls.by_author.adam});
+      if (N.calls?.by_author?.viktorka!=null) addKPI({icon:'👩',label:T.kpis.callsV, value:N.calls.by_author.viktorka});
+    }
+    if (N.sentiment){
+      if (N.sentiment.positive_rate_percent!=null) addKPI({icon:'🌤️',label:T.kpis.pos, value:Math.round(N.sentiment.positive_rate_percent)});
+      if (N.sentiment.negative_rate_percent!=null) addKPI({icon:'⛈️',label:T.kpis.neg, value:Math.round(N.sentiment.negative_rate_percent)});
+    }
+    if (N.by_author?.adam!=null && N.by_author?.viktorka!=null){
+      const totalMsgs = (N.by_author.adam + N.by_author.viktorka) || 1;
+      addKPI({icon:'🧭',label:T.kpis.shareA, value: Math.round(N.by_author.adam/totalMsgs*100)});
+      addKPI({icon:'🧭',label:T.kpis.shareV, value: Math.round(N.by_author.viktorka/totalMsgs*100)});
+    }
+    if (N.replies){
+      if (N.replies.median_sec_adam!=null)     addKPI({icon:'⚡',label:T.kpis.medianA, value:N.replies.median_sec_adam});
+      if (N.replies.median_sec_viktorka!=null) addKPI({icon:'⚡',label:T.kpis.medianV, value:N.replies.median_sec_viktorka});
+    }
+    if (N.media){
+      if (N.media.images!=null)   addKPI({icon:'🖼️',label:T.kpis.photos,   value:N.media.images});
+      if (N.media.videos!=null)   addKPI({icon:'🎞️',label:T.kpis.videos,   value:N.media.videos});
+      if (N.media.audios!=null)   addKPI({icon:'🎙️',label:T.kpis.audios,   value:N.media.audios});
+      if (N.media.gifs!=null)     addKPI({icon:'🌀',label:T.kpis.gifs,     value:N.media.gifs});
+      if (N.media.stickers!=null) addKPI({icon:'💠',label:T.kpis.stickers, value:N.media.stickers});
+      if (N.media.documents!=null)addKPI({icon:'📄',label:T.kpis.docs,     value:N.media.documents});
+    }
+
+    // ===== Grafy =====
+    const chartsWrap = document.getElementById('charts');
+    const hasChart   = typeof window.Chart !== 'undefined';
+    function addChartCard(title){
+      const card = document.createElement('div');
+      card.className = 'card-g';
+      card.innerHTML = `<h3 class="mb-2">${title}</h3><canvas height="220"></canvas>`;
+      chartsWrap.appendChild(card);
+      return card.querySelector('canvas').getContext('2d');
+    }
+
+    if (hasChart && N.by_author?.adam!=null && N.by_author?.viktorka!=null){
+      const ctx = addChartCard(T.charts.share);
+      new Chart(ctx,{ type:'doughnut',
+        data:{ labels:['Adam', isUA?'Вікторка':'Viktorka'],
+               datasets:[{ data:[N.by_author.adam,N.by_author.viktorka], backgroundColor:['#8b5cf6','#22d3ee'], borderWidth:0 }]},
+        options:{ cutout:'62%', plugins:{ legend:{ labels:{ color:'#dbe5ff' } } } }
+      });
+    }
+
+    if (hasChart && N.sentiment?.positive_rate_percent!=null && N.sentiment?.negative_rate_percent!=null){
+      const pos=N.sentiment.positive_rate_percent, neg=N.sentiment.negative_rate_percent, neu=Math.max(0,100-pos-neg);
+      const ctx = addChartCard(T.charts.sentiment);
+      new Chart(ctx,{ type:'doughnut',
+        data:{ labels:[T.charts.pos, T.charts.neu, T.charts.neg],
+               datasets:[{ data:[pos,neu,neg], backgroundColor:['#63e6be','#9aa7c7','#ff7b7b'], borderWidth:0 }]},
+        options:{ cutout:'58%', plugins:{ legend:{ labels:{ color:'#dbe5ff' } } } }
+      });
+    }
+
+    if (hasChart && Array.isArray(N.calls?.by_month) && N.calls.by_month.length){
+      const labels = N.calls.by_month.map(x=>x.month||'');
+      const totals = N.calls.by_month.map(x=>x.total??0);
+      const ctx = addChartCard(T.charts.callsByMonth);
+      new Chart(ctx,{ type:'bar',
+        data:{ labels, datasets:[{ label:T.charts.callsByMonth,
+          data:totals, backgroundColor:'rgba(140,179,255,.35)', borderColor:'#8cb3ff', borderWidth:1 }]},
+        options:{ plugins:{legend:{display:false}},
+          scales:{ x:{ticks:{color:'#dbe5ff'},grid:{color:'rgba(255,255,255,.06)'}},
+                   y:{ticks:{color:'#dbe5ff'},grid:{color:'rgba(255,255,255,.06)'}} } }
+      });
+    }
+
+    if (hasChart && Array.isArray(N.lengths?.histogram_words_overall)){
+      const rows=N.lengths.histogram_words_overall, labels=rows.map(r=>r.bucket), data=rows.map(r=>r.count);
+      const ctx = addChartCard(T.charts.length);
+      new Chart(ctx,{ type:'bar',
+        data:{ labels, datasets:[{ label:isUA?'Кількість повідомлень':'Počet zpráv',
+          data, backgroundColor:'rgba(200,107,250,.35)', borderColor:'#c86bfa', borderWidth:1 }]},
+        options:{ plugins:{legend:{display:false}},
+          scales:{ x:{ticks:{color:'#dbe5ff'},grid:{color:'rgba(255,255,255,.06)'}},
+                   y:{ticks:{color:'#dbe5ff'},grid:{color:'rgba(255,255,255,.06)'}} } }
+      });
+    }
+
+    // ===== Seznamy =====
+    const listsWrap = document.getElementById('lists');
+    if (Array.isArray(N.topics?.top_nouns_overall) || N.topics?.top_nouns_by_author){
+      const card = document.createElement('div'); card.className='card-g';
+      let html = `<h3 class="mb-2">${isUA?'Топ слова (іменники)':'Top slova (podstatná jména)'}</h3>`;
+      if (Array.isArray(N.topics?.top_nouns_overall)){
+        html += `<p class="text-white/70 mb-2">${isUA?'Всього':'Celkem'}</p><ul class="grid grid-cols-2 gap-2 mb-4">` +
+          N.topics.top_nouns_overall.slice(0,12).map(w=>`<li class="flex justify-between"><span>${w.lemma}</span><span class="text-white/70">${num(w.count)}</span></li>`).join('') + `</ul>`;
+      }
+      if (Array.isArray(N.topics?.top_nouns_by_author?.adam)){
+        html += `<p class="text-white/70 mb-2">Adam</p><ul class="grid grid-cols-2 gap-2 mb-4">` +
+          N.topics.top_nouns_by_author.adam.slice(0,8).map(w=>`<li class="flex justify-between"><span>${w.lemma}</span><span class="text-white/70">${num(w.count)}</span></li>`).join('') + `</ul>`;
+      }
+      if (Array.isArray(N.topics?.top_nouns_by_author?.viktorka)){
+        html += `<p class="text-white/70 mb-2">${isUA?'Вікторка':'Viktorka'}</p><ul class="grid grid-cols-2 gap-2">` +
+          N.topics.top_nouns_by_author.viktorka.slice(0,8).map(w=>`<li class="flex justify-between"><span>${w.lemma}</span><span class="text-white/70">${num(w.count)}</span></li>`).join('') + `</ul>`;
+      }
+      card.innerHTML = html; listsWrap.appendChild(card);
+    }
+    if (Array.isArray(N.topics?.top_phrases)){
+      const card = document.createElement('div'); card.className='card-g';
+      card.innerHTML = `<h3 class="mb-2">${isUA?'Топ фрази':'Top fráze'}</h3>
+        <ul class="grid gap-2">
+          ${N.topics.top_phrases.slice(0,10).map(p=>`<li class="flex justify-between"><span>„${p.phrase}“</span><span class="text-white/70">${num(p.count)}</span></li>`).join('')}
+        </ul>`;
+      listsWrap.appendChild(card);
+    }
+
+    // ===== Měsíční rozpad zpráv =====
+    if (Array.isArray(N.messages_by_month) && N.messages_by_month.length){
+      const MM = N.messages_by_month.slice();
+
+      const cardTbl = document.createElement('div');
+      cardTbl.className = 'card-g md:col-span-2';
+      cardTbl.innerHTML = `<h3 class="mb-3">${T.lists.msgsTbl}</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="text-white/70">
+              <tr>
+                <th class="text-left py-2 pr-4">${isUA?'Місяць':'Měsíc'}</th>
+                <th class="text-right py-2 pr-4">${isUA?'Всього':'Celkem'}</th>
+                <th class="text-right py-2 pr-4">Adam</th>
+                <th class="text-right py-2">${isUA?'Вікторка':'Viktorka'}</th>
+              </tr>
+            </thead>
+            <tbody id="mmRows"></tbody>
+          </table>
+        </div>`;
+      listsWrap.appendChild(cardTbl);
+
+      const rows = cardTbl.querySelector('#mmRows');
+      const fmt = s => {
+        const [y,m] = s.split('-'); 
+        const d = new Date(Number(y), Number(m)-1, 1);
+        return d.toLocaleDateString(LOCALE,{year:'numeric', month:'2-digit'});
+      };
+      MM.forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-1.5 pr-4">${fmt(r.month)}</td>
+          <td class="py-1.5 pr-4 text-right">${num(r.total)}</td>
+          <td class="py-1.5 pr-4 text-right">${num(r.adam)}</td>
+          <td class="py-1.5 text-right">${num(r.viktorka)}</td>`;
+        rows.appendChild(tr);
+      });
+
+      if (hasChart){
+        const cardChart = document.createElement('div');
+        cardChart.className = 'card-g md:col-span-2';
+        cardChart.innerHTML = `<h3 class="mb-2">${T.charts.msgsByMonth}</h3><canvas height="240"></canvas>`;
+        chartsWrap.appendChild(cardChart);
+
+        const labels = MM.map(x=>x.month);
+        const adam   = MM.map(x=>x.adam);
+        const vika   = MM.map(x=>x.viktorka);
+        const ctx    = cardChart.querySelector('canvas').getContext('2d');
+
+        new Chart(ctx,{
+          type:'bar',
+          data:{
+            labels,
+            datasets:[
+              { label:'Adam', data:adam, backgroundColor:'rgba(139,92,246,.55)', borderColor:'#8b5cf6', borderWidth:1, stack:'msgs' },
+              { label:(isUA?'Вікторка':'Viktorka'), data:vika, backgroundColor:'rgba(34,211,238,.55)', borderColor:'#22d3ee', borderWidth:1, stack:'msgs' }
+            ]
+          },
+          options:{
+            responsive:true,
+            plugins:{ legend:{ labels:{ color:'#dbe5ff'} }, tooltip:{ mode:'index', intersect:false } },
+            scales:{
+              x:{ stacked:true, ticks:{ color:'#dbe5ff' }, grid:{ color:'rgba(255,255,255,.06)'} },
+              y:{ stacked:true, ticks:{ color:'#dbe5ff' }, grid:{ color:'rgba(255,255,255,.06)'} }
+            }
+          }
+        });
+      }
+    }
+
+    // Jemný reveal
+    document.querySelectorAll('.kpi,.card-g').forEach((el,i)=>{
+      el.style.opacity=0; el.style.transform='translateY(12px) scale(.98)'; el.style.filter='blur(2px)';
+      setTimeout(()=>{ el.style.transition='opacity .6s ease, transform .6s ease, filter .6s ease';
+        el.style.opacity=1; el.style.transform='none'; el.style.filter='none'; }, 90*i + 120);
+    });
+  }
+
+  // Po načtení DOMu vyčkej na NDATA z ../assets/data.js (defer)
+  function boot(){
+    const t0 = performance.now();
+    (function wait(){
+      if (window.NDATA){ start(); return; }
+      if (performance.now()-t0 > 5000){ console.warn('NDATA not ready — rendering with empty data'); start(); return; }
+      setTimeout(wait, 30);
+    })();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>

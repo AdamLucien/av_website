@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>AV · 13</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/site.css" />
+
+  <script defer src="/assets/data.js"></script>
+  <script defer src="/assets/shared-bg.js"></script>
+  <script defer src="/assets/partials/header.js"></script>
+
+  <style>
+    .bg-mesh {
+      background:
+        radial-gradient(900px 600px at 20% -20%, rgba(139,92,246,.20), transparent 60%),
+        radial-gradient(900px 600px at 80% 120%, rgba(34,211,238,.18), transparent 60%),
+        linear-gradient(180deg,#0a0f1f,#0e1220);
+    }
+    .glass {
+      backdrop-filter: blur(16px) saturate(140%);
+      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12)
+    }
+    .grad-text {
+      background:linear-gradient(135deg,#8b5cf6 0%,#22d3ee 70%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent
+    }
+    .btn-primary {background:linear-gradient(135deg,#8b5cf6,#22d3ee)}
+
+    /* KPI bloky */
+    .kpi-love .label{color:#cfd7ff}
+    .kpi-line{display:flex; align-items:baseline; gap:.6rem}
+    .kpi-emoji{font-size:1.25rem; line-height:1}
+    .kpi-text{color:#e9edff}
+    .kpi-sub{color:#b6c2ff; font-size:.9rem}
+  </style>
+</head>
+
+<body class="bg-mesh text-white selection:bg-amethyst/30">
+  <div id="app-header"></div>
+
+  <main class="relative z-10">
+    <!-- HERO -->
+    <section class="max-w-6xl mx-auto px-4 pt-16 pb-10 md:pt-24 md:pb-16 grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h1 id="ttl" class="grad-text text-4xl md:text-6xl font-black leading-tight" data-reveal>13 měsíců lásky.</h1>
+        <p id="sub" class="text-aura/90 mt-3 text-lg" data-reveal>Od první kapky deště po dnešní den. Tohle je náš živý příběh.</p>
+
+        <div class="mt-6 flex flex-wrap gap-3" data-reveal>
+          <a href="/rain-story/index.html" class="btn-primary rounded-xl px-5 py-3 tap" id="ctaStory">Začít příběh 💖</a>
+          <a href="/stats/index.html" class="glass rounded-xl px-5 py-3 tap" id="ctaStats">Statistiky</a>
+          <a href="/letter/index.html" class="glass rounded-xl px-5 py-3 tap" id="ctaLetter">Dopis</a>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3 text-sm text-white/80" data-reveal>
+          <span class="glass rounded-full px-3 py-1" id="badgeMsgs">❤️ 84 541 zpráv</span>
+          <span class="glass rounded-full px-3 py-1" id="badgeRoses">🌹 7 růží</span>
+        </div>
+      </div>
+
+      <!-- PRAVÝ HERO PANEL = jen Miluju tě -->
+      <div class="relative" data-reveal>
+        <div class="glass rounded-3xl p-7 h-[280px] flex items-center justify-center text-center">
+          <div>
+            <div class="text-4xl md:text-5xl font-black leading-tight">2 532×</div>
+            <div class="mt-1 text-white/85 text-lg">Miluju tě — každý řádek je vyznání</div>
+            <div class="mt-4 text-sm text-white/60">🧡 Unikátní KPI z projektu</div>
+          </div>
+        </div>
+        <div class="absolute -bottom-6 -right-6 blur-3xl rounded-full w-44 h-44 bg-amethyst/30"></div>
+      </div>
+    </section>
+
+    <!-- SPODNÍ 3 DLAŽDICE = MINI-KPI KARTY -->
+    <section class="max-w-6xl mx-auto px-4 pb-16 grid md:grid-cols-3 gap-6">
+      <!-- 1) LOC + FILES -->
+      <div class="glass rounded-2xl p-6" data-reveal>
+        <div class="kpi-love space-y-3">
+          <div class="label text-sm" id="kpiTitleA">Naše začátky — čísla</div>
+          <div class="kpi-line">
+            <span class="kpi-emoji">🧮</span>
+            <div>
+              <div class="kpi-text" id="kpiLocA">2 532 řádků kódu</div>
+              <div class="kpi-sub" id="kpiLocSubA">2 532 malých „miluju tě“, co drží náš web i nás.</div>
+            </div>
+          </div>
+          <div class="kpi-line">
+            <span class="kpi-emoji">📄</span>
+            <div>
+              <div class="kpi-text" id="kpiFilesA">16 souborů</div>
+              <div class="kpi-sub" id="kpiFilesSubA">Šestnáct kapitol, každá jinak voní po tobě.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2) MIX + TIME -->
+      <div class="glass rounded-2xl p-6" data-reveal>
+        <div class="kpi-love space-y-3">
+          <div class="label text-sm" id="kpiTitleB">Konstrukce lásky — tech mix</div>
+          <div class="kpi-line">
+            <span class="kpi-emoji">🔠</span>
+            <div>
+              <div class="kpi-text" id="kpiMixB">HTML 58% · CSS 13% · JS 29%</div>
+              <div class="kpi-sub" id="kpiMixSubB">Kostra, krása a pohyb — pevná, něžná a živá.</div>
+            </div>
+          </div>
+          <div class="kpi-line">
+            <span class="kpi-emoji">⏱️</span>
+            <div>
+              <div class="kpi-text" id="kpiTimeB">11 h 41 min</div>
+              <div class="kpi-sub" id="kpiTimeSubB">Čas s myšlenkou na tebe v každém odstavci.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3) SPEED + PACE + BIG -->
+      <div class="glass rounded-2xl p-6" data-reveal>
+        <div class="kpi-love space-y-3">
+          <div class="label text-sm" id="kpiTitleC">Tempo & rekordy</div>
+          <div class="kpi-line">
+            <span class="kpi-emoji">⚡</span>
+            <div>
+              <div class="kpi-text" id="kpiSpeedC">~230 ř./hod</div>
+              <div class="kpi-sub" id="kpiSpeedSubC">Tempo srdce, když napíšeš „miluji tě“.</div>
+            </div>
+          </div>
+          <div class="kpi-line">
+            <span class="kpi-emoji">🫗</span>
+            <div>
+              <div class="kpi-text" id="kpiPaceC">1 řádek / ~16 s</div>
+              <div class="kpi-sub" id="kpiPaceSubC">Každých šestnáct vteřin další drobný důkaz.</div>
+            </div>
+          </div>
+          <div class="kpi-line">
+            <span class="kpi-emoji">🏆</span>
+            <div>
+              <div class="kpi-text" id="kpiBigC">stats/index.html — 339 ř.</div>
+              <div class="kpi-sub" id="kpiBigSubC">I láska si zaslouží grafy, co stoupají.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center text-white/60 py-10">© AV — 13</footer>
+
+  <script>
+    const LANG = localStorage.getItem('lang') || 'cs';
+    const T = {
+      cs:{
+        hero:{
+          title:"13 měsíců lásky.",
+          sub:"Od první kapky deště po dnešní den. Tohle je náš živý příběh.",
+          ctaStory:"Začít příběh 💖",
+          ctaStats:"Statistiky",
+          ctaLetter:"Dopis",
+          badgeMsgs:"❤️ 84 541 zpráv",
+          badgeRoses:"🌹 7 růží"
+        }
+      },
+      ua:{
+        hero:{
+          title:"13 місяців кохання.",
+          sub:"Від першої краплі до сьогодні. Це наша жива історія.",
+          ctaStory:"Почати історію 💖",
+          ctaStats:"Статистика",
+          ctaLetter:"Лист",
+          badgeMsgs:"❤️ 84 541 повідомлень",
+          badgeRoses:"🌹 7 троянд"
+        }
+      }
+    }[LANG];
+
+    // Hero
+    ttl.textContent = T.hero.title;
+    sub.textContent = T.hero.sub;
+    ctaStory.textContent  = T.hero.ctaStory;
+    ctaStats.textContent  = T.hero.ctaStats;
+    ctaLetter.textContent = T.hero.ctaLetter;
+    badgeMsgs.textContent = T.hero.badgeMsgs;
+    badgeRoses.textContent = T.hero.badgeRoses;
+
+    // Reveal animace
+    document.querySelectorAll('[data-reveal]').forEach((el,i)=>{
+      el.style.opacity=0;
+      el.style.transform='translateY(12px) scale(.98)';
+      el.style.filter='blur(2px)';
+      setTimeout(()=>{
+        el.style.transition='opacity .6s ease, transform .6s ease, filter .6s ease';
+        el.style.opacity=1;
+        el.style.transform='none';
+        el.style.filter='none';
+      }, 120*i + 150);
+    });
+  </script>
+</body>
+</html>

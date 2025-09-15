@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>AV · 7 růží</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/site.css" />
+
+  <script defer src="/assets/data.js"></script>
+  <script defer src="/assets/shared-bg.js"></script>
+  <script defer src="/assets/partials/header.js"></script>
+
+  <!-- GSAP (jen pro hezčí rozkvět; stránka funguje i bez něj) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+
+  <style>
+    .bg-mesh{background:
+      radial-gradient(900px 600px at 20% -20%, rgba(139,92,246,.20), transparent 60%),
+      radial-gradient(900px 600px at 80% 120%, rgba(34,211,238,.18), transparent 60%),
+      linear-gradient(180deg,#0a0f1f,#0e1220);}
+    .card-g{border-radius:20px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(0,0,0,.35);position:relative;overflow:hidden}
+    .meadow{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(180deg,transparent,rgba(34,197,94,.08));filter:blur(8px)}
+    .spark{position:absolute;pointer-events:none;animation:spark 2.8s ease-in forwards;opacity:0}
+    @keyframes spark{0%{transform:translateY(0) scale(.8);opacity:0}15%{opacity:.95}100%{transform:translateY(-90px) scale(1.1);opacity:0}}
+    @media (max-width: 768px){ .stageGrid{gap:14px} }
+  </style>
+</head>
+
+<body class="bg-mesh text-white selection:bg-amethyst/30">
+  <div id="app-header"></div>
+
+  <main class="container section relative z-10">
+    <h1 id="ttl" class="grad-text text-3xl md:text-5xl font-black mb-2">7 růží</h1>
+    <p id="sub" class="text-aura/90 mb-5">Šest rudých a jedna bílá — naše číslo je 7.</p>
+
+    <!-- hlavní scéna -->
+    <section class="card-g mb-6">
+      <!-- FIX: explicitní výška, aby nikdy neměla 0 px -->
+      <svg id="roseStrip" class="w-full block" height="260" viewBox="0 0 1200 330" aria-label="Sedm růží"></svg>
+      <div class="meadow" aria-hidden="true"></div>
+      <p id="legend" class="text-center text-white/80 mt-3">6 červených + 1 bílá. Naše číslo je 7.</p>
+      <div id="sparkLayer" class="absolute inset-0"></div>
+    </section>
+
+    <!-- romantické popisy -->
+    <section id="stages" class="grid md:grid-cols-2 stageGrid gap-5"></section>
+  </main>
+
+  <footer class="text-center text-white/60 py-10 relative z-10">© AV — 13</footer>
+
+<script>
+(function(){
+  /* i18n */
+  const LANG = localStorage.getItem('lang') || 'cs';
+  const isUA = LANG === 'ua';
+  const t = (cs,ua)=> isUA ? (ua ?? cs) : (cs ?? ua);
+
+  document.getElementById('ttl').textContent = t('7 růží','7 троянд');
+  document.getElementById('sub').textContent = t('Šest rudých a jedna bílá — naše číslo je 7.','Шість червоних і одна біла — наше число 7.');
+  document.getElementById('legend').textContent = t('6 červených + 1 bílá. Naše číslo je 7.','6 червоних + 1 біла. Наше число — 7.');
+
+  /* Etapy = text do karet */
+  const STAGES = [
+    {k:"s1", type:"red",   label:t("Záblesk & přilnutí","Спалах і зближення"),
+      text:t("„Кохаю тебе безмежно 😘“ – první silné vyznání. Déšť jako znamení, že jsme se našli.",
+             "«Кохаю тебе безмежно 😘» — перше сильне зізнання. Дощ як знак, що ми знайшлися.")},
+    {k:"s2", type:"red",   label:t("„Má lásko“","«Моє кохання»"),
+      text:t("Slovo pro „my“. Změnilo tón každého dalšího dne.",
+             "Слово про «нас». Змінило тон кожного дня.")},
+    {k:"s3", type:"red",   label:t("První ticho","Перша тиша"),
+      text:t("Ne konec, jen pauza. A po ní znovu volba: nás.",
+             "Не кінець — пауза. А після неї знову вибір: ми.")},
+    {k:"s4", type:"red",   label:t("Druhá zkouška","Друге випробування"),
+      text:t("Vydrželi jsme. Dýcháme klidněji.",
+             "Ми витримали. Дихаємо спокійніше.")},
+    {k:"s5", type:"red",   label:t("Rekalibrace & jaro","Рекалібрування й весна"),
+      text:t("Březen s nejvyšším pozitivnem. Světlo po zimě.",
+             "Березень — найвищий позитив. Світло після зими.")},
+    {k:"s6", type:"red",   label:t("Mikroodstupy, ale blízko","Мікропауза, та близько"),
+      text:t("Krátké pauzy bez rozchodu. Držíme se něžněji.",
+             "Короткі паузи без розриву. Тримаємось ніжніше.")},
+    {k:"s7", type:"white", label:t("SPOLU","РАЗОМ"),
+      text:t("Uzavření kruhu: „patřím k tobě“. Tichá jistota, že jsme my.",
+             "Замикання кола: «належу тобі». Тиха певність: ми.")}
+  ];
+
+  /* SVG růže (okvětní lístky – žádná „lízátka“) */
+  const svg = document.getElementById('roseStrip');
+  const svgns = 'http://www.w3.org/2000/svg';
+  const W = 1200, H = 330; svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const defs = document.createElementNS(svgns,'defs');
+  defs.innerHTML = `
+    <radialGradient id="petalRed" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffd0d4"/><stop offset="100%" stop-color="#e63946"/>
+    </radialGradient>
+    <radialGradient id="petalWhite" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#e9ecef"/>
+    </radialGradient>
+    <radialGradient id="center" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd6a6"/><stop offset="100%" stop-color="#ff9f43"/>
+    </radialGradient>`;
+  svg.appendChild(defs);
+
+  function drawRose(x, y, scale, white=false){
+    const g = document.createElementNS(svgns,'g');
+    g.setAttribute('transform', `translate(${x},${y}) scale(${scale})`);
+    g.style.transformOrigin = 'center';
+    svg.appendChild(g);
+
+    const stem = document.createElementNS(svgns,'path');
+    stem.setAttribute('d', `M 0 0 q 12 40 3 110`);
+    stem.setAttribute('fill','none');
+    stem.setAttribute('stroke','#2fa66a');
+    stem.setAttribute('stroke-width','6');
+    stem.setAttribute('stroke-linecap','round');
+
+    const leaf1 = document.createElementNS(svgns,'path');
+    leaf1.setAttribute('d', `M 8 55 q 40 -20 64 10 q -46 18 -64 -10`);
+    leaf1.setAttribute('fill','#3fbf7a'); leaf1.setAttribute('opacity','.0');
+
+    const leaf2 = document.createElementNS(svgns,'path');
+    leaf2.setAttribute('d', `M -6 75 q -46 -16 -68 12 q 42 18 68 -12`);
+    leaf2.setAttribute('fill','#3fbf7a'); leaf2.setAttribute('opacity','.0');
+
+    const petals = [];
+    for(let i=0;i<5;i++){
+      const p = document.createElementNS(svgns,'path');
+      const ang = (i*72 - 18) * Math.PI/180;
+      const cx = Math.cos(ang)*12, cy = Math.sin(ang)*8 - 10;
+      p.setAttribute('d', `M ${cx} ${cy} c -18 -18 -2 -40 16 -30 c 10 6 14 18 14 30 c 0 18 -18 26 -30 18 Z`);
+      p.setAttribute('fill', white?'url(#petalWhite)':'url(#petalRed)');
+      petals.push(p);
+    }
+
+    const center = document.createElementNS(svgns,'circle');
+    center.setAttribute('cx', 0); center.setAttribute('cy', -10); center.setAttribute('r', 10);
+    center.setAttribute('fill','url(#center)');
+
+    g.appendChild(stem);
+    g.appendChild(leaf1); g.appendChild(leaf2);
+    petals.forEach(p=>g.appendChild(p));
+    g.appendChild(center);
+
+    return {g, stem, leaf1, leaf2, petals, center};
+  }
+
+  const isMobile = matchMedia('(max-width: 768px)').matches;
+  const gap   = isMobile ? 150 : 165;
+  const startX= isMobile ?  80 : 120;
+  const baseY = isMobile ? 180 : 190;
+  const scale = isMobile ? 1.15 : 1;
+
+  const roses = STAGES.map((s,i)=>{
+    const wave = Math.sin(i*0.7) * 12;
+    const r = drawRose(startX + i*gap, baseY + wave, scale, s.type==='white');
+    r.stage = s;
+    return r;
+  });
+
+  /* Fallback: vždycky něco vidět, i bez GSAP */
+  function showStatic(){
+    roses.forEach(r=>{
+      r.leaf1.setAttribute('opacity','.9');
+      r.leaf2.setAttribute('opacity','.85');
+      r.petals.forEach(p=>{ p.style.opacity = 1; p.style.transform = 'none'; });
+      r.center.style.opacity = 1;
+    });
+  }
+
+  function animate(){
+    const HAS_GSAP = typeof window.gsap !== 'undefined';
+    if (!HAS_GSAP || matchMedia('(prefers-reduced-motion: reduce)').matches){
+      showStatic(); return;
+    }
+    roses.forEach((r, idx)=>{
+      const d = .22*idx;
+      gsap.fromTo(r.g, {rotation:-2}, {rotation:2, duration:3.5, yoyo:true, repeat:-1, ease:'sine.inOut', delay:d});
+      gsap.to(r.leaf1, {opacity:.9,  duration:.6, ease:'power2.out', delay:d+.25});
+      gsap.to(r.leaf2, {opacity:.85, duration:.6, ease:'power2.out', delay:d+.35});
+      r.petals.forEach((p,i)=>{
+        gsap.fromTo(p, {opacity:0, scale:.2, rotate:-18}, {opacity:1, scale:1, rotate:0, transformOrigin:'center', duration:.7, ease:'back.out(1.6)', delay:d+.12*i});
+      });
+      gsap.fromTo(r.center, {opacity:0, scale:.2}, {opacity:1, scale:1, duration:.6, ease:'back.out(1.8)', delay:d+.5});
+
+      if (r.stage.type==='white'){
+        const layer = document.getElementById('sparkLayer');
+        function spark(){
+          const bb = svg.getBoundingClientRect();
+          const m = r.g.getCTM(); const cx=m.e, cy=m.f-40;
+          const el = document.createElement('div');
+          el.className='spark'; el.textContent = Math.random()>.5 ? '🤍' : '✨';
+          el.style.left = ( (cx/W)*bb.width + (Math.random()*26 - 13) ) + 'px';
+          el.style.top  = ( (cy/H)*bb.height + (Math.random()*8 - 4) ) + 'px';
+          el.style.fontSize = (16 + Math.random()*10) + 'px';
+          layer.appendChild(el);
+          setTimeout(()=>el.remove(), 2800);
+        }
+        setTimeout(()=>{spark(); spark();}, (d+.8)*1000);
+      }
+    });
+  }
+  animate();
+
+  /* Karty etap */
+  const wrap = document.getElementById('stages');
+  const roseWord = t('Růže','Троянда');
+  STAGES.forEach((s,i)=>{
+    const card = document.createElement('article');
+    card.className = 'card-g';
+    card.innerHTML = `
+      <h3 class="text-xl font-semibold mb-1">${i+1}. ${roseWord}</h3>
+      <p class="text-white/80"><em>${s.label}</em> — ${s.text}</p>`;
+    wrap.appendChild(card);
+  });
+
+})();
+</script>
+</body>
+</html>

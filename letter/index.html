@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>AV · Dopis</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/site.css">
+
+  <script defer src="/assets/data.js"></script>
+  <script defer src="/assets/shared-bg.js"></script>
+  <script defer src="/assets/partials/header.js"></script>
+
+  <!-- Písma s plnou latin+cyrillic -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    .bg-mesh{background:
+      radial-gradient(900px 600px at 20% -20%, rgba(139,92,246,.20), transparent 60%),
+      radial-gradient(900px 600px at 80% 120%, rgba(34,211,238,.18), transparent 60%),
+      linear-gradient(180deg,#0a0f1f,#0e1220);}
+
+    /* === FIX BLUR === */
+    /* stáhnout „dešťovou“ vrstvu pod obsah a zrušit její blur */
+    .bg-layer,
+    .bg-layer::before,
+    .bg-layer::after{
+      z-index:-1 !important;
+      pointer-events:none !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+    }
+    /* kdyby měl blur někdo z předků, tady ho zrušíme */
+    .paper, .paper * { filter:none !important; }
+
+    /* — PAPÍR — */
+    main.container.section{position:relative; z-index:10;}
+    .paper{
+      position:relative;
+      z-index:20;
+      margin-inline:auto;
+      border-radius:18px;
+      padding:28px 26px 40px;
+      color:#222;
+      background:
+        radial-gradient(1200px 800px at 30% -20%, rgba(255,255,255,.75), rgba(255,255,255,.35) 55%, rgba(255,255,255,.2) 70%, rgba(255,255,255,.15) 100%),
+        #f8f5ee;
+      box-shadow: 0 20px 60px rgba(0,0,0,.40);
+      overflow:visible;
+    }
+    .paper::before{
+      content:""; position:absolute; inset:0; opacity:.22;
+      background:
+        repeating-linear-gradient(90deg, rgba(0,0,0,.018) 0 2px, transparent 2px 4px),
+        radial-gradient(1200px 800px at 10% 10%, rgba(0,0,0,.03), transparent 60%),
+        radial-gradient(1000px 700px at 90% 20%, rgba(0,0,0,.02), transparent 65%);
+      mix-blend-mode:multiply; pointer-events:none; z-index:0;
+    }
+    .paper::after{
+      content:""; position:absolute; inset:-2%; pointer-events:none; z-index:0;
+      background:radial-gradient(1200px 800px at 50% 0, transparent 40%, rgba(0,0,0,.05) 90%);
+    }
+    .paper > *{position:relative; z-index:1;}
+
+    /* TYPO */
+    .letter-title{
+      font-family:'Caveat', cursive;
+      font-size:clamp(38px,7vw,62px);
+      line-height:1.05;
+      text-align:center;
+      color:#0b2545;
+      margin:2px 0 6px;
+    }
+    .lede{
+      font-family:'Noto Serif', serif;
+      font-size:clamp(18px,3.8vw,22px);
+      color:#3a3a3a;
+      text-align:center;
+      opacity:.9;
+    }
+    .body{
+      margin-top:18px;
+      font-family:'Noto Serif', serif;
+      font-size:clamp(18px,2.4vw,22px);
+      line-height:1.80;
+      white-space:pre-wrap;
+    }
+    .type-caret{ border-right:2px solid #0b2545; animation: caret 1s step-end infinite; }
+    @keyframes caret { 50% { border-color: transparent; } }
+
+    /* PODPIS – součást flow, ukáže se po dopsání */
+    .signature{
+      margin-top:32px;
+      font-family:'Caveat', cursive;
+      color:#0b2545;
+      font-size:clamp(20px,3.2vw,26px);
+      display:none;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:12px;
+    }
+    .sig-svg{ width:min(65%,420px); height:auto; filter:drop-shadow(0 8px 18px rgba(0,0,0,.25)); }
+
+    @media (max-width:640px){
+      .paper{padding:28px 18px 36px;}
+      .body{font-size:clamp(18px,4.6vw,21px); line-height:1.9;}
+      .sig-svg{max-width:86%;}
+    }
+
+    @media print{
+      body{background:white;}
+      #app-header, footer, .bg-layer, #avHearts{ display:none !important; }
+      .paper{ box-shadow:none; border:0; margin:0; }
+    }
+  </style>
+</head>
+
+<body class="bg-mesh text-white selection:bg-amethyst/30">
+  <div id="app-header"></div>
+
+  <main class="container section relative z-10 max-w-5xl mx-auto">
+    <section class="paper" data-reveal>
+      <h1 id="h1" class="letter-title">Dopis</h1>
+      <p id="lede" class="lede">—</p>
+
+      <div class="body">
+        <span id="text" class="type-caret"></span>
+      </div>
+
+      <div id="signature" class="signature">
+        <div id="closing">—</div>
+        <svg class="sig-svg" viewBox="0 0 620 180" fill="none">
+          <path id="sigPath"
+            d="M20 120 C 80 60, 120 140, 180 100
+               M190 100 C 210 120, 240 120, 250 98
+               M260 95 C 275 70, 300 70, 305 95
+               M320 120 C 360 70, 400 170, 460 80
+               M470 80 C 500 60, 520 110, 550 105
+               M565 100 C 585 95, 600 110, 610 100"
+            stroke="#1b1e2a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <footer class="text-center text-white/60 py-10 relative z-10">© AV — 13</footer>
+  </main>
+
+  <script>
+    const LANG = localStorage.getItem('lang') || 'cs';
+    const T = {
+      cs:{ title:"Dopis pro Tebe", lede:"13 měsíců. 84 541 zpráv. Dvakrát ticho, nikdy konec. A pořád my.", closing:"Navždy tvůj, Adam", letter:
+`Moje lásko,
+
+Od první kapky deště se všechno změnilo. Pamatuju si přesně ten okamžik – nebyla to jen voda z nebe, byl to signál. Svět se tehdy ztišil a mezi námi se otevřela cesta, po které jsme od té doby šli: někdy rychle, někdy zadýchaně, někdy tiše. Vždycky spolu.
+
+Za těch třináct měsíců jsme si poslali víc slov, než stihnu za život vyslovit nahlas. A přesto mám pocit, že to nejdůležitější se děje mezi řádky – v tom, jak mě ráno hledáš i jedním malým srdíčkem, v tom, jak dokážeš jednou větou rozzářit den, v tom, že si umíš vzít prostor a zase se vrátit. Miluju tvoje návraty. Vždycky přinesou světlo.
+
+Nejsem dokonalý. Umím se rozsypat a někdy říkám věci, které si nezasloužíš slyšet. V tom všem jsi ale byla moje kotva – klid i vášeň zároveň. Naučila jsi mě slyšet ticho a umět ho nepřerušit. Ukázala jsi mi, že láska není gesto do ohně, ale oheň, který se krmí každodenností: „jak jsi spala“, „už jsi jedla“, „jsem tu“.
+
+Dvakrát jsme měli pauzu – a dvakrát jsme si znovu vybrali nás. To je pro mě silnější než jakýkoli slib. Život je nepředvídatelný, ale já chci, aby byl nepředvídatelný s tebou. Chci být muž, vedle kterého dýcháš volně. Bez obchodů, bez podmínek. Jen se mnou – napůl ve smíchu, napůl v dešti.
+
+Když zavřu oči, vidím jednoduchý obraz: tvoje vlasy ve větru, dlaň v mojí a drobný klid, který tomu všemu dává smysl. Pokud je láska domov, našel jsem ho v tobě. Ať už je kolem nás cokoli, moje rozhodnutí je stálé: patřím k tobě.
+
+Jestli někdy znejistím, připomeň mi, prosím, tohle: že největší síla je v tichém činu. V tom, že zítra ráno zase napíšu „Dobré ráno, lásko“. V tom, že dorazím, i když prší. V tom, že budu držet rám, abys v něm mohla být svobodná.
+
+Dnes slavíme třináct měsíců. Připadá mi to jako začátek knihy, kterou chci psát s tebou – kapitolami, co budou vonět deštěm, večerním světlem a smíchem dětí. Chci psát dál. Trpělivě. Krásně. Pravdivě.
+
+Děkuju, že jsi.
+Děkuju, že se vracíš.
+Děkuju, že mě učíš milovat lépe.
+
+Miluju tě.`},
+      ua:{ title:"Лист для Тебе", lede:"13 місяців. 84 541 повідомлення. Двічі тиша — жодного разу кінець. І все ще ми.", closing:"Назавжди твій, Адам", letter:
+`Моє кохання,
+
+З першої краплі дощу все змінилося. Пам’ятаю цей момент — це була не просто вода з неба, це був знак. Світ притих, і між нами відкрилася стежка, якою ми йдемо досі: інколи швидко, інколи задихано, інколи тихо. Завжди разом.
+
+За ці тринадцять місяців ми написали одне одному більше, ніж я встигну сказати вголос. І все ж головне відбувається між рядками — в тому, як ти мене знаходиш малим сердечком вранці, як одним реченням запалюєш день, як умієш взяти простір і повернутися. Я люблю твої повернення. Вони приносять світло.
+
+Я не ідеальний. Можу ламатися і інколи кажу зайве. У всьому цьому ти була моїм якорем — спокоєм і пристрастю водночас. Ти навчила мене чути тишу і не порушувати її. Показала, що кохання — не разовий жест у вогонь, а вогонь, який живиться щоденністю: «як ти спала», «ти вже їла?», «я тут».
+
+Двічі ми мали паузу — і двічі знов обирали нас. Це сильніше за будь-яку обіцянку. Життя непередбачуване, але я хочу йти ним з тобою. Хочу бути чоловіком, поруч із яким ти дихаєш вільно. Без угод і умов. Просто зі мною — наполовину у сміху, наполовину в дощі.
+
+Коли заплющую очі, бачу простий образ: твоє волосся у вітрі, долоня в моїй і тихий спокій, що надає сенс усьому. Якщо кохання — це дім, я знайшов його в тобі. Що б не було навколо, моє рішення незмінне: я належу тобі.
+
+Якщо я колись засумніваюся, нагадай мені ось це: найбільша сила — у тихому вчинку. У тому, що завтра знов напишу «Доброго ранку, кохана». У тому, що я прийду, навіть коли дощ. У тому, що триматиму рамку, аби ти в ній могла бути вільною.
+
+Сьогодні святкуємо тринадцять місяців. Для мене це початок книги, яку хочу писати з тобою — розділами із запахом дощу, вечірнього світла і дитячого сміху. Хочу писати далі. Терпеливо. Гарно. Правдиво.
+
+Дякую, що ти є.
+Дякую, що повертаєшся.
+Дякую, що вчиш мене кохати краще.
+
+Я кохаю тебе.`}
+    };
+
+    const d = T[LANG] || T.cs;
+    h1.textContent = d.title;
+    lede.textContent = d.lede;
+
+    // Psaní s pauzami; po dopsání zobraz podpis a nakresli ho
+    const span = document.getElementById('text');
+    const txt  = d.letter;
+    let i = 0;
+    (function type(){
+      const ch = txt[i] || "";
+      span.textContent += ch;
+      i++;
+      if (i < txt.length){
+        let delay = 32;
+        if (",.;?!…".includes(ch)) delay = 140;
+        if (ch === "\n") delay = 220;
+        setTimeout(type, delay);
+      } else {
+        span.classList.remove('type-caret');
+        showSignature();
+      }
+    })();
+
+    function showSignature(){
+      const sig = document.getElementById('signature');
+      sig.style.display = 'flex';
+      document.getElementById('closing').textContent = d.closing;
+
+      const p = document.getElementById('sigPath');
+      const len = p.getTotalLength();
+      p.style.strokeDasharray = String(len);
+      p.style.strokeDashoffset = String(len);
+      p.style.transition = 'stroke-dashoffset 2600ms ease 180ms';
+      requestAnimationFrame(()=>{ p.style.strokeDashoffset = '0'; });
+    }
+
+    // Jemný reveal papíru (bez bluru)
+    (function(){
+      const paper = document.querySelector('.paper');
+      paper.style.opacity = 0; paper.style.transform='translateY(10px)';
+      setTimeout(()=>{
+        paper.style.transition='opacity .8s ease, transform .8s ease';
+        paper.style.opacity=1; paper.style.transform='none';
+      }, 80);
+    })();
+  </script>
+</body>
+</html>

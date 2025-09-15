@@ -1,0 +1,62 @@
+<header class="sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 py-2">
+    <div class="flex items-center justify-between">
+      <a href="/index.html" class="flex items-center gap-2 group" aria-label="AV · 13">
+        <img src="/assets/brand/av-logo.png" alt="AV · 13" class="logo-img h-16 w-auto select-none pointer-events-none" />
+        <span class="sr-only">AV · 13</span>
+      </a>
+
+      <div class="nav-wrap hidden md:block">
+        <div class="nav-glow"></div>
+        <nav class="nav glass relative">
+          <a class="navlink" href="/rain-story/index.html" data-i18n="nav.rain">Déšť</a>
+          <a class="navlink" href="/timeline/index.html"   data-i18n="nav.timeline">Timeline</a>
+          <a class="navlink" href="/stats/index.html"      data-i18n="nav.stats">Statistiky</a>
+          <a class="navlink" href="/roses/index.html"      data-i18n="nav.roses">Růže</a>
+          <a class="navlink" href="/letter/index.html"     data-i18n="nav.letter">Dopis</a>
+          
+          <span id="navLine" class="nav-underline"></span>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="langCZ" class="flag-btn tap" aria-label="Čeština">
+          <span class="flag" id="flagCZ" title="CZ">
+            <svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="1" y="1" fill="#d7141a"/><polygon points="0,0 1.2,1 0,2" fill="#11457e"/></svg>
+          </span>
+        </button>
+        <button id="langUA" class="flag-btn tap" aria-label="Українська">
+          <span class="flag" id="flagUA" title="UA">
+            <svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#0057b7"/><rect width="3" height="1" y="1" fill="#ffd700"/></svg>
+          </span>
+        </button>
+        <button id="hamb" class="md:hidden glass rounded-xl px-3 py-2 tap">≡</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="drawer" class="hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-xl">
+    <div class="max-w-sm w-[92%] mx-auto mt-16">
+      <div class="mx-auto w-14 h-1.5 rounded-full bg-white/25 mb-3"></div>
+      <div class="glass rounded-2xl p-5 shadow-2xl">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <button id="langCZm" class="flag-btn"><span class="flag" id="flagCZm">
+            <svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="1" y="1" fill="#d7141a"/><polygon points="0,0 1.2,1 0,2" fill="#11457e"/></svg>
+          </span></button>
+          <button id="langUAm" class="flag-btn opacity-90"><span class="flag" id="flagUAm">
+            <svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#0057b7"/><rect width="3" height="1" y="1" fill="#ffd700"/></svg>
+          </span></button>
+        </div>
+        <nav class="divide-y divide-white/10">
+          <a class="block py-3 flex items-center gap-3" href="/rain-story/index.html" data-i18n="nav.rain">🌧️ Déšť</a>
+          <a class="block py-3 flex items-center gap-3" href="/timeline/index.html"   data-i18n="nav.timeline">🗓️ Timeline</a>
+          <a class="block py-3 flex items-center gap-3" href="/stats/index.html"      data-i18n="nav.stats">📊 Statistiky</a>
+          <a class="block py-3 flex items-center gap-3" href="/roses/index.html"      data-i18n="nav.roses">🌹 Růže</a>
+          <a class="block py-3 flex items-center gap-3" href="/letter/index.html"     data-i18n="nav.letter">💌 Dopis</a>
+          
+        </nav>
+        <button id="drawerClose" class="w-full glass rounded-xl py-3 mt-5" data-i18n="nav.close">Zavřít</button>
+      </div>
+    </div>
+  </div>
+</header>

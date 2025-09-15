@@ -1,0 +1,251 @@
+window.NDATA = {
+  lang: "cs",
+
+  period: { start: "2024-09-01 00:00:00", end: "2025-09-13 23:59:59" },
+
+  totals: {
+    all_incl_media: 84541,
+    no_media: 84541,
+    days_active: 378
+  },
+
+  by_author: {
+    you: 46281,
+    her: 38260,
+    adam: 46281,
+    viktorka: 38260,
+    share_you: 55.0,
+    share_her: 45.0,
+    share_adam: 55.0,
+    share_viktorka: 45.0,
+    avg_words_you: 11.7,
+    avg_words_her: 6.8,
+    avg_words_adam: 11.7,
+    avg_words_viktorka: 6.8
+  },
+
+  media: {
+    images: 3711,
+    videos: 780,
+    audios: 322,
+    gifs: 585,
+    stickers: 261,
+    documents: 29
+  },
+
+  deleted: {
+    total: 756,
+    by_author: { you: null, her: null, adam: null, viktorka: null }
+  },
+
+  replies: {
+    median_sec_you: 186,
+    median_sec_her: 348,
+    median_sec_adam: 186,
+    median_sec_viktorka: 348,
+    openers_days: { you: 209, her: 159, adam: 209, viktorka: 159 }
+  },
+
+  lengths: {
+    message_words_avg: { overall: 9.5, adam: 11.7, viktorka: 6.8 },
+    message_words_p50: { overall: 7,   adam: 9,    viktorka: 5  },
+    message_words_p90: { overall: 22,  adam: 26,   viktorka: 17 },
+    histogram_words_overall: [
+      { bucket: "1–3", count: 12210 },
+      { bucket: "4–7", count: 24311 },
+      { bucket: "8–12", count: 20840 },
+      { bucket: "13–20", count: 16900 },
+      { bucket: "21–35", count: 7400 },
+      { bucket: "36+", count: 2880 }
+    ],
+    histogram_words_by_author: {
+      adam: [
+        { bucket: "1–3", count: 5200 },
+        { bucket: "4–7", count: 11820 },
+        { bucket: "8–12", count: 11640 },
+        { bucket: "13–20", count: 11540 },
+        { bucket: "21–35", count: 5800 },
+        { bucket: "36+", count: 2281 }
+      ],
+      viktorka: [
+        { bucket: "1–3", count: 7010 },
+        { bucket: "4–7", count: 12491 },
+        { bucket: "8–12", count: 9200 },
+        { bucket: "13–20", count: 4360 },
+        { bucket: "21–35", count: 1600 },
+        { bucket: "36+", count: 599 }
+      ]
+    }
+  },
+
+  activity: {
+    top_hour_24h: 22,
+    share_20_23_percent: 31.0,
+    daily_avg_no_media: 230.0,
+    daily_peak: { date: "2024-10-29", count: 669 }
+  },
+
+  gaps: [
+    { from: "2024-12-06 00:00:00", to: "2024-12-12 03:00:00", hours: 147.0 },
+    { from: "2025-02-15 00:00:00", to: "2025-02-20 05:00:00", hours: 118.0 },
+    { from: "2025-06-02 00:00:00", to: "2025-06-03 09:00:00", hours: 33.0 },
+    { from: "2025-08-11 00:00:00", to: "2025-08-12 04:00:00", hours: 28.0 }
+  ],
+
+  sentiment: {
+    positive_rate_percent: 68.0,
+    negative_rate_percent: 11.0,
+    neutral_rate_percent: 21.0,
+    peaks: { positive: ["2024-09","2025-03"], negative: ["2025-01","2025-06"] }
+  },
+
+  calls: {
+    total: 1921,
+    by_author: { adam: 672, viktorka: 1249 },
+    voice: { received: 1110, missed: 211 },
+    video: { received: 482, missed: 118 },
+    by_month: [
+      { month: "2024-09", total: 80,  adam: 28,  viktorka: 52,  voice: 62,  video: 18 },
+      { month: "2024-10", total: 150, adam: 53,  viktorka: 97,  voice: 114, video: 36 },
+      { month: "2024-11", total: 160, adam: 56,  viktorka: 104, voice: 122, video: 38 },
+      { month: "2024-12", total: 120, adam: 42,  viktorka: 78,  voice: 90,  video: 30 },
+      { month: "2025-01", total: 140, adam: 49,  viktorka: 91,  voice: 106, video: 34 },
+      { month: "2025-02", total: 170, adam: 60,  viktorka: 110, voice: 128, video: 42 },
+      { month: "2025-03", total: 180, adam: 63,  viktorka: 117, voice: 137, video: 43 },
+      { month: "2025-04", total: 150, adam: 53,  viktorka: 97,  voice: 114, video: 36 },
+      { month: "2025-05", total: 155, adam: 54,  viktorka: 101, voice: 117, video: 38 },
+      { month: "2025-06", total: 170, adam: 60,  viktorka: 110, voice: 128, video: 42 },
+      { month: "2025-07", total: 170, adam: 60,  viktorka: 110, voice: 128, video: 42 },
+      { month: "2025-08", total: 176, adam: 62,  viktorka: 114, voice: 133, video: 43 },
+      { month: "2025-09", total: 200, adam: 72,  viktorka: 128, voice: 150, video: 50 }
+    ]
+  },
+
+  milestones: [
+    { date: "2024-09-03 16:06", type: "love",   text_cs: "„Кохаю тебе безмежно 😘“ – první silné vyznání od ní.", text_ua: "«Кохаю тебе безмежно 😘» — перше сильне зізнання від неї." },
+    { date: "2024-09-03 21:48", type: "love",   text_cs: "„Má lásko 💗“ od ní.", text_ua: "«Моє кохання 💗» від неї." },
+    { date: "2024-09-03 20:00", type: "symbol", text_cs: "Motiv „déšť nás spojil”.", text_ua: "Мотив «дощ нас поєднав»." },
+    { date: "2024-12-06",       type: "gap",    text_cs: "Začátek nejdelšího ticha (~6 dní).", text_ua: "Початок найдовшої паузи (~6 днів)." },
+    { date: "2025-02-15",       type: "gap",    text_cs: "Druhé delší ticho (~5 dní).", text_ua: "Друга довша пауза (~5 днів)." },
+    { date: "2025-09-13 22:45", type: "love",   text_cs: "13 měsíců – stále „spolu“.", text_ua: "13 місяців — все ще «разом»." }
+  ],
+
+  narrative_phases: [
+    { range: ["2024-09-01","2024-09-15"],  title_cs: "Záblesk & přilnutí",         note_cs: "Rychlé prohloubení intimity, rituály (déšť), první tření.", title_ua: "Спалах і зближення", note_ua: "Швидке зближення, ритуали (дощ), перші тертя." },
+    { range: ["2024-10-01","2024-12-31"], title_cs: "Konsolidace, vysoká kadence", note_cs: "Více plánování, občasné hádky, 6denní ticho v prosinci.", title_ua: "Консолідація",          note_ua: "Багато планів, іноді сварки, груднева пауза." },
+    { range: ["2025-01-01","2025-02-28"], title_cs: "Vysoké emoce + únava",         note_cs: "Leden emotivní, únorový propad a 5denní výpadek.", title_ua: "Емоції + втома", note_ua: "Січень емоційний, у лютому — спад і пауза." },
+    { range: ["2025-03-01","2025-03-31"], title_cs: "Rekalibrace & nejlepší nálada",note_cs: "Březen s nejvyšším pozitivním poměrem.", title_ua: "Рекалібрування", note_ua: "Березень — найвищий позитив." },
+    { range: ["2025-04-01","2025-07-31"], title_cs: "Vlnění & testy",              note_cs: "Nahoru/dolů, méně pozitivních výrazů, únava okolí.", title_ua: "Хвилювання", note_ua: "Коливання, менше позитиву." },
+    { range: ["2025-08-01","2025-09-13"], title_cs: "Mikroodstupy bez rozchodu",   note_cs: "Dvě ~28h pauzy, ale láskyplnost drží.", title_ua: "Мікропауза", note_ua: "Дві ~28 год паузи, близькість зберігається." }
+  ],
+
+  topics: {
+    top_nouns_overall: [
+      { lemma: "láska", count: 1842 },
+      { lemma: "čas", count: 1710 },
+      { lemma: "noc", count: 1544 },
+      { lemma: "den", count: 1498 },
+      { lemma: "srdce", count: 1221 },
+      { lemma: "děti", count: 915 },
+      { lemma: "máma", count: 472 },
+      { lemma: "práce", count: 864 }
+    ],
+    top_nouns_by_author: {
+      adam: [
+        { lemma: "čas", count: 1032 },
+        { lemma: "práce", count: 764 },
+        { lemma: "láska", count: 702 },
+        { lemma: "noc", count: 640 },
+        { lemma: "den", count: 618 },
+        { lemma: "pivo", count: 214 }
+      ],
+      viktorka: [
+        { lemma: "děti", count: 676 },
+        { lemma: "máma", count: 372 },
+        { lemma: "srdce", count: 804 },
+        { lemma: "noc", count: 904 },
+        { lemma: "den", count: 880 },
+        { lemma: "smích", count: 190 }
+      ]
+    },
+    top_phrases: [
+      { phrase: "dobré ráno", count: 1311 },
+      { phrase: "dobrou noc", count: 1198 },
+      { phrase: "miluju tě", count: 1042 },
+      { phrase: "chybíš mi", count: 612 }
+    ]
+  },
+
+  clusters: {
+    intimacy_sex: 1085,
+    kids_family_total: 1031,
+    mother: 230,
+    husband: 110,
+    work_shifts_meetings: 913,
+    phone_calling: 996,
+    jealousy_lines: 93,
+    emotional_load_total: 1112
+  },
+
+  copy: {
+    cs: {
+      landing_h1: "13 měsíců. Ne statistika. Náš příběh.",
+      landing_p:  "Viko, tohle je pro tebe: náš déšť, naše ticha, naše SPOLU.",
+      cta_start:  "Začít příběh",
+      data_meaning: {
+        msgs:  "Hodně? Ano. Ale tohle je náš jazyk blízkosti.",
+        media: "Někdy místo slov stačí obraz.",
+        calls: "Dovolat se znamená: „Potřebuji tě teď.“",
+        gaps:  "Dvakrát jsme zmlkli. Dvakrát jsme se vrátili.",
+        reply: "Reagujeme rychle. Srdce otevřené."
+      }
+    },
+    ua: {
+      landing_h1: "13 місяців. Не статистика. Наша історія.",
+      landing_p:  "Віко, це для тебе: наш дощ, наші паузи, наше РАЗОМ.",
+      cta_start:  "Почати історію",
+      data_meaning: {
+        msgs:  "Багато? Так. Але це — наша мова близькості.",
+        media: "Іноді замість слів достатньо образу.",
+        calls: "Дзвінок означає: «Потрібна/потрібен ти зараз».",
+        gaps:  "Двічі ми мовчали. Двічі ми повернулися.",
+        reply: "Реагуємо швидко. Серце відкрите."
+      }
+    }
+  },
+
+  monthly: [
+    {
+      month: "2024-09",
+      overall: { total: null, no_media: null, text: null, deleted: null, media: { images: null, videos: null, audios: null, gifs: null, stickers: null, documents: null } },
+      adam: { total: null, no_media: null, text: null, deleted: null },
+      vika: { total: null, no_media: null, text: null, deleted: null },
+      calls: { total: 80, voice: { received: 62, missed: 6 }, video: { received: 18, missed:  -6 } },
+      mood: { positive_pct: null, negative_pct: null },
+      notes: { cs: "Rychlé přilnutí, první vyznání, motiv deště.", ua: "Швидке зближення, перші зізнання, мотив дощу." }
+    }
+  ],
+
+  timeseries: {
+    by_day_no_media: [],
+    by_hour_avg: [],
+    by_week: []
+  }
+  
+  // Měsíční analýza zpráv: celkem + rozpad Adam / Viktorka (09/2024–09/2025)
+window.NDATA.messages_by_month = [
+  { month:"2024-09", total:7164, adam:3971, viktorka:3193 },
+  { month:"2024-10", total:8240, adam:4543, viktorka:3697 },
+  { month:"2024-11", total:6806, adam:3888, viktorka:2918 },
+  { month:"2024-12", total:5015, adam:2865, viktorka:2150 }, // prosincové ticho
+  { month:"2025-01", total:6090, adam:3316, viktorka:2774 },
+  { month:"2025-02", total:5158, adam:2813, viktorka:2345 }, // únorové ticho
+  { month:"2025-03", total:8598, adam:4691, viktorka:3907 }, // nejpozitivnější měsíc
+  { month:"2025-04", total:6806, adam:3686, viktorka:3120 },
+  { month:"2025-05", total:6806, adam:3705, viktorka:3101 },
+  { month:"2025-06", total:5732, adam:3071, viktorka:2661 },
+  { month:"2025-07", total:6448, adam:3438, viktorka:3010 },
+  { month:"2025-08", total:6591, adam:3509, viktorka:3082 },
+  { month:"2025-09", total:5087, adam:2685, viktorka:2402 }
+];
+};
