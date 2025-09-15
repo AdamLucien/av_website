@@ -1,7 +1,7 @@
 (function(){
   const L = localStorage.getItem('lang') || 'cs';
   const t = (cs,ua)=> L==='ua' ? (ua||cs) : (cs||ua);
-  const base = (p)=> p.replace(/^//,'');
+  const base = (p) => { return p.replace(/^\//, ""); };
     const depth = (location.pathname.match(/\//g)||[]).length - 1;
     return (depth>1 ? ('../'.repeat(depth-1)+p.replace(/^\//,'')) : ('/'+p.replace(/^\//,'')));
   };
