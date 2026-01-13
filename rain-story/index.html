@@ -106,7 +106,7 @@
     </div>
   </main>
 
-  <footer class="text-center text-white/60 py-10 relative z-10">© AV — 13</footer>
+  <footer class="text-center text-white/60 py-10 relative z-10">© AV — 17</footer>
 
   <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -123,7 +123,7 @@
 
       const T = (LANG==='ua') ? {
         title: "Дощ нас поєднав",
-        sub:    (N)=>`13 місяців між ${fmtDate(N.period?.start)} і ${fmtDate(N.period?.end)}. Повідомлень: ${num(N.totals?.all_incl_media)}. Двічі тиша — завжди повернення.`,
+        sub:    (N)=>`17 місяців між ${fmtDate(N.period?.start)} і ${fmtDate(N.period?.end)}. Повідомлень: ${num(N.totals?.all_incl_media)}. Двічі тиша — завжди повернення.`,
         chips:  (N)=>[
           `❤️ ${num(N.totals?.all_incl_media)} повідомлень`,
           `📅 ${num(N.totals?.days_active)} днів разом`,
@@ -142,7 +142,7 @@
         gapWord: "Тиша"
       } : {
         title: "Déšť nás spojil",
-        sub:    (N)=>`13 měsíců mezi ${fmtDate(N.period?.start)} a ${fmtDate(N.period?.end)}. Zpráv: ${num(N.totals?.all_incl_media)}. Dvakrát ticho, vždy návrat.`,
+        sub:    (N)=>`17 měsíců mezi ${fmtDate(N.period?.start)} a ${fmtDate(N.period?.end)}. Zpráv: ${num(N.totals?.all_incl_media)}. Dvakrát ticho, vždy návrat.`,
         chips:  (N)=>[
           `❤️ ${num(N.totals?.all_incl_media)} zpráv`,
           `📅 ${num(N.totals?.days_active)} dní spolu`,

@@ -33,7 +33,7 @@
     <div class="max-w-6xl mx-auto px-4 py-2">
       <div class="flex items-center justify-between">
         <a class="flex items-center" href="${base('index.html')}" data-no-turn="1">
-          <img src="${base('assets/brand/av-logo.png')}" alt="AV · 13" class="h-12 w-auto md:h-14">
+          <img src="${base('assets/brand/av-logo.png')}" alt="AV · 17" class="h-12 w-auto md:h-14">
         </a>
 
         <div class="nav-wrap hidden md:block relative">

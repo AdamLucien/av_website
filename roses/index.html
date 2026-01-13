@@ -50,7 +50,7 @@
     <section id="stages" class="grid md:grid-cols-2 stageGrid gap-5"></section>
   </main>
 
-  <footer class="text-center text-white/60 py-10 relative z-10">© AV — 13</footer>
+  <footer class="text-center text-white/60 py-10 relative z-10">© AV — 17</footer>
 
 <script>
 (function(){
@@ -63,29 +63,35 @@
   document.getElementById('sub').textContent = t('Šest rudých a jedna bílá — naše číslo je 7.','Шість червоних і одна біла — наше число 7.');
   document.getElementById('legend').textContent = t('6 červených + 1 bílá. Naše číslo je 7.','6 червоних + 1 біла. Наше число — 7.');
 
-  /* Etapy = text do karet */
+  /* Etapy = text do karet (Aktualizováno na 500 dní / Leden 2026) */
   const STAGES = [
     {k:"s1", type:"red",   label:t("Záblesk & přilnutí","Спалах і зближення"),
       text:t("„Кохаю тебе безмежно 😘“ – první silné vyznání. Déšť jako znamení, že jsme se našli.",
              "«Кохаю тебе безмежно 😘» — перше сильне зізнання. Дощ як знак, що ми знайшлися.")},
-    {k:"s2", type:"red",   label:t("„Má lásko“","«Моє кохання»"),
-      text:t("Slovo pro „my“. Změnilo tón každého dalšího dne.",
-             "Слово про «нас». Змінило тон кожного дня.")},
-    {k:"s3", type:"red",   label:t("První ticho","Перша тиша"),
-      text:t("Ne konec, jen pauza. A po ní znovu volba: nás.",
-             "Не кінець — пауза. А після неї знову вибір: ми.")},
-    {k:"s4", type:"red",   label:t("Druhá zkouška","Друге випробування"),
-      text:t("Vydrželi jsme. Dýcháme klidněji.",
-             "Ми витримали. Дихаємо спокійніше.")},
-    {k:"s5", type:"red",   label:t("Rekalibrace & jaro","Рекалібрування й весна"),
-      text:t("Březen s nejvyšším pozitivnem. Světlo po zimě.",
-             "Березень — найвищий позитив. Світло після зими.")},
-    {k:"s6", type:"red",   label:t("Mikroodstupy, ale blízko","Мікропауза, та близько"),
-      text:t("Krátké pauzy bez rozchodu. Držíme se něžněji.",
-             "Короткі паузи без розриву. Тримаємось ніжніше.")},
-    {k:"s7", type:"white", label:t("SPOLU","РАЗОМ"),
-      text:t("Uzavření kruhu: „patřím k tobě“. Tichá jistota, že jsme my.",
-             "Замикання кола: «належу тобі». Тиха певність: ми.")}
+    
+    {k:"s2", type:"red",   label:t("První ticho","Перша тиша"),
+      text:t("Prosinec 2024: Šest dní pauzy. Nebyl to konec, ale zkouška, po které jsme si znovu vybrali nás.",
+             "Грудень 2024: Шість днів паузи. Це був не кінець, а випробування, після якого ми знову обрали нас.")},
+    
+    {k:"s3", type:"red",   label:t("Rekalibrace & jaro","Рекалібрування й весна"),
+      text:t("Březen 2025 s nejvyšším pozitivním sentimentem. Světlo a klid po náročné zimě.",
+             "Березень 2025 з найвищим позитивом. Світло та спокій після важкої зими.")},
+    
+    {k:"s4", type:"red",   label:t("Stabilita vs. Vlny","Стабільність vs Хвилі"),
+      text:t("Léto a podzim 2025. Učíme se dýchat i v mikroodstupech. Držíme se něžněji a bez podmínek.",
+             "Літо та осінь 2025. Вчимося дихати навіть у мікропаузах. Тримаємось ніжніше та без умов.")},
+    
+    {k:"s5", type:"red",   label:t("Hloubka & Audio","Глибина та Аудіо"),
+      text:t("Konec roku 2025: Zprávy střídají dlouhé hovory. Hlas se stává naším hlavním domovem.",
+             "Кінець 2025 року: Повідомлення замінюють довгі дзвінки. Голос стає нашим головним домом.")},
+    
+    {k:"s6", type:"red",   label:t("Téma Strachu","Тема Страху"),
+      text:t("Leden 2026: „Mám strach“ už není bariéra, ale most. Sdílená obava nás spojila víc než jistota.",
+             "Січень 2026: «Мені страшно» — це вже не бар'єр, а міст. Спільна тривога зблизила нас більше, ніж певність.")},
+    
+    {k:"s7", type:"white", label:t("500 DNÍ SPOLU","500 ДНІВ РАЗОМ"),
+      text:t("Přes 112 000 zpráv a tisíce hovorů. Tichá jistota: patřím k tobě, ať prší nebo svítí slunce.",
+             "Понад 112 000 повідомлень і тисячі дзвінків. Тиха впевненість: я належу тобі, за будь-якої погоди.")}
   ];
 
   /* SVG růže (okvětní lístky – žádná „lízátka“) */
