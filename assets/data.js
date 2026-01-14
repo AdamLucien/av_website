@@ -1,7 +1,7 @@
 window.NDATA = {
   lang: "cs",
   period: { start: "2024-09-01 00:21:30", end: "2026-01-13 20:39:47" },
-  totals: { all_incl_media: 112457, no_media: 101894, days_active: 500 },
+  totals: { all_incl_media: 112457, no_media: 101894, days_active: 517 },
   by_author: {
     you: 61851, her: 50606, adam: 61851, viktorka: 50606,
     share_you: 55.0, share_her: 45.0, share_adam: 55.0, share_viktorka: 45.0,
@@ -169,7 +169,7 @@ window.NDATA = {
     { month: "2026-01", overall: { total: 2420, no_media: 2100, text: 2000, deleted: 15, media: { images: 90, videos: 10, audios: 12, gifs: 15, stickers: 180, documents: 0 } }, adam: { total: 1310, no_media: 1150, text: 1100, deleted: 8 }, vika: { total: 1110, no_media: 950, text: 900, deleted: 7 }, calls: { total: 94, voice: { received: 88, missed: 6 }, video: { received: 6, missed: 0 } }, mood: { positive_pct: 60, negative_pct: 35 }, notes: { cs: "Leden 2026: Intenzivní hovory o strachu a budoucnosti.", ua: "Січень 2026: Інтенсивні розмови про страх і майбутнє." } }
   ],
   timeseries: {
-    // Celkem 500 hodnot (denní počet zpráv bez médií od 1.9.2024 do 13.1.2026)
+    // Celkem 517 hodnot (denní počet zpráv bez médií od 1.9.2024 do 13.1.2026)
     // Zobrazen začátek, zlomové body a konec řady
     by_day_no_media: [
       12, 45, 128, 210, 185, 192, 140, 165, 312, 280, // Září 2024 start
